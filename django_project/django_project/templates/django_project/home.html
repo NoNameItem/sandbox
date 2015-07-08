@@ -1,0 +1,29 @@
+{% extends "django_project/base.html" %}
+
+{% block title %}
+    main page
+{% endblock %}
+
+{% block content %}
+   <div class="container">
+   <div class="jumbotron">
+   	<div class="container">
+   		<h1>Welcome to my sandbox</h1>
+   		<p align="justify">This is projects, I wrote while learn python, django, tornado, etc. Some of them can require you to
+        register. Feel free to play with them and if you find any bugs please tell me about it via email (nonameitem@me.com)</p>
+   		<h2>
+   			List of project:
+   		</h2>
+        {% if projects %}
+            <ul>
+            {% for project in projects %}
+                 <p><li><a href="{{ project.link }}"><strong>{{ project.name }}</strong>: {{ project.info }}</a></li></p>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>There are no projects, sorry</p>
+        {% endif %}
+   	</div>
+   </div>
+   </div>
+{% endblock %}
