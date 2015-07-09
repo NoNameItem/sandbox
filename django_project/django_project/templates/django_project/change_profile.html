@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    change your profile
+{% endblock %}
+
+{% block headers %}
+    <link href="{% static "django_project/css/auth-form.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <form class="form-signin" action="#" method="post" role="form">
+        {% csrf_token %}
+    	<legend>Update your profile info</legend>
+
+    	<div class="form-group">
+            {% if user_form.first_name.errors %}
+            <div class="alert alert-danger" role="alert">
+                <label for="id_first_name">{{ user_form.first_name.errors.as_text }}</label>
+            </div>
+            {% endif %}
+    		<label for="id_first_name">First name</label>
+    		<input type="text" class="form-control" name="first_name" id="id_first_name" value="{{ get_user.first_name }}">
+    	</div>
+
+        <div class="form-group">
+            {% if user_form.last_name.errors %}
+            <div class="alert alert-danger" role="alert">
+                <label for="id_last_name">{{ user_form.last_name.errors.as_text }}</label>
+            </div>
+            {% endif %}
+    		<label for="id_last_name">Last name</label>
+    		<input type="text" class="form-control" name="last_name" id="id_last_name" value="{{ get_user.last_name }}">
+    	</div>
+
+        <div class="form-group">
+            {% if user_form.email.errors %}
+            <div class="alert alert-danger" role="alert">
+                <label for="id_email">{{ user_form.email.errors.as_text }}</label>
+            </div>
+            {% endif %}
+    		<label for="id_email">Email</label>
+    		<input type="text" class="form-control" name="email" id="id_email" value="{{ get_user.email }}">
+    	</div>
+
+        <div class="form-group">
+            {% if profile_form.sex.errors %}
+            <div class="alert alert-danger" role="alert">
+                <label for="id_sex">{{ user_profile_form.sex.errors.as_text }}</label>
+            </div>
+            {% endif %}
+            <label for="id_sex">Sex</label>
+            <select class="form-control" id="id_sex" name="sex">
+                <option value="0" {% if user_profile.sex == 0 %}selected="selected"{% endif %}>Female</option>
+                <option value="1" {% if user_profile.sex == 1 %}selected="selected"{% endif %}>Male</option>
+                <option value="2" {% if user_profile.sex == 2 %}selected="selected"{% endif %}>Undefined</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            {% if profile_form.about.errors %}
+            <div class="alert alert-danger" role="alert">
+                <label for="id_about">{{ user_profile_form.about.errors.as_text }}</label>
+            </div>
+            {% endif %}
+    		<label for="id_about">About</label>
+            <textarea class="form-control" name="about" id="id_about">{{ user_profile.about }}</textarea>
+    	</div>
+
+
+    	<button type="submit" class="btn btn-default btn-lg btn-block">Submit</button>
+    </form>
+{{ profile_form.as_p }}
+{% endblock %}

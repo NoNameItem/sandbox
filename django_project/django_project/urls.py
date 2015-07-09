@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
-from views import MyRegistrationView
+import settings
+import django_project.views as views
 
 urlpatterns = patterns('',
     # Examples:
@@ -8,6 +10,12 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/register/$', MyRegistrationView.as_view(), name='registration_register'),
+    url(r'^accounts/register/$', views.MyRegistrationView.as_view(), name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^user/(?P<username>\w+)$', views.profile),
+    url(r'^change_photo/(?P<user_id>\d+)$', views.change_photo),
+    url(r'^change_profile/(?P<user_id>\d+)$', views.change_profile),
 )
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

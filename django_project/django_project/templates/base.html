@@ -38,7 +38,7 @@
 
     		<ul class="nav navbar-nav navbar-right">
     			{% if user.is_authenticated %}
-                    <li><a href="/user/{{ user.id }}">Profile</a></li>
+                    <li><a href="/user/{{ user.username }}">Profile</a></li>
                     <li><a href="{% url 'auth_logout' %}?next=/">Log Out</a></li>
                     {% else %}
                     <li><a href="{% url 'auth_login' %}">Log In</a></li>
@@ -55,5 +55,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+    {% block scripts %}{% endblock %}
     </body>
 </html>

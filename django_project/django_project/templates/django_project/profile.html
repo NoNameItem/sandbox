@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {% if self %}
+        your profile
+    {% else %}
+        {{ get_user.username }}'s profile
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ get_user.username }}<small>'s profile</small></h1>
+</div>
+<div class="row">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        {% if user_profile.profile_image %}
+
+            	<a href="{{ user_profile.profile_image.url }}" class="thumbnail">
+            		<img src="{{ user_profile.profile_image.url }}" alt="">
+            	</a>
+        {% else %}
+            	<a href="/media/images/default.jpg" class="thumbnail">
+            		<img src="/media/images/default.jpg" alt="A generic square placeholder image with a white border around it, making it resemble a photograph taken with an old instant camera">
+            	</a>
+        {% endif %}
+
+        {% if self %}
+            <form action="/change_photo/{{ get_user.id }}" method="post" class="form-select" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="id_image" class="hidden">Image:</label>
+                <input type="file" id="id_image" class="hidden" name="image">
+                <button class="btn btn-default" id="change_photo" type="submit">Change photo</button>
+
+
+            </form>
+        {% endif %}
+        </div>
+
+    <div class="col-md-8">
+        <div class="panel panel-default">
+        	  <div class="panel-heading">
+        			<h3 class="panel-title">Info</h3>
+        	  </div>
+        	  <div class="panel-body">
+        			<ul>
+                        <li><p><strong>First name:</strong>
+                            {% if get_user.first_name %}
+                                {{ get_user.first_name }}
+                            {% else %}
+                                Undefined
+                            {% endif %}
+                        </p></li>
+                        <li><p><strong>Last name:</strong>
+                            {% if get_user.last_name %}
+                                {{ get_user.last_name }}
+                            {% else %}
+                                Undefined
+                            {% endif %}
+                        </p></li>
+                        <li><p><strong>Sex:</strong> {{ user_profile.get_sex_display }}</p></li>
+                        <li><p><strong>About:</strong> {{ user_profile.about }}</p></li>
+                    </ul>
+              {% if self %}
+                    <a class="btn btn-default" href="/change_profile/{{ get_user.id }}" role="button">Change profile</a>
+              {% endif %}
+        	  </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "django_project/js/change_photo.js" %}"></script>
+{% endblock %}

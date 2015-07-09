@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_project',
 
     'registration',
@@ -64,7 +65,7 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'sandbox',
+        'NAME': 'sandbox.db',
     }
 }
 
@@ -85,14 +86,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-dev-files/
 
+TOP_DIR = os.path.dirname(BASE_DIR)
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    '/home/nonameitem/Coding/python/sandbox/static-dev',
+    os.path.join(TOP_DIR, 'static-dev'),
+
 )
-STATIC_ROOT = '/home/nonameitem/Coding/python/sandbox/static'
+STATIC_ROOT = os.path.join(TOP_DIR, 'static')
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
 
 
 # Registration setup
 
 REGISTRATION_AUTO_LOGIN = True
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+LOGIN_URL = '/accounts/login'
