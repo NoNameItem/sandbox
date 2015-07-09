@@ -37,7 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_project',
-    
+
+    'registration',
+
     'chat',
 )
 
@@ -83,8 +85,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-dev-files/
 
-STATIC_URL = '/static-dev/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     '/home/nonameitem/Coding/python/sandbox/static-dev',
 )
 STATIC_ROOT = '/home/nonameitem/Coding/python/sandbox/static'
+
+
+# Registration setup
+
+REGISTRATION_AUTO_LOGIN = True
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
