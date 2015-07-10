@@ -11,6 +11,9 @@ from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
 
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
+        new_profile = UserProfile()
+        new_profile.user = user
+        new_profile.save()
         return '/user/{0}'.format(user.username)
 
     def register(self, request, form):
