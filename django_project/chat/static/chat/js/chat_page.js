@@ -115,12 +115,14 @@ function startChat(chatId, username){
             populateUsers(mess.participants);
             //alert(mess.potential_particicpants);
             populatePotentialUsers(mess.potential_participants);
+        } else if(mess.type =='T'){
+            $('#topic').text(mess.topic);
         }
     };
 
-    ws.onclose(function(){
+    ws.onclose = function(){
        setTimeout(function() {startChat(chatId, username)}, 100);
-    });
+    };
 
     function sendMessage() {
         var opt = {

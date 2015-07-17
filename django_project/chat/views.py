@@ -156,6 +156,9 @@ def change_topic(request):
             raise PermissionDenied
         chat.topic = request.POST['value']
         chat.save()
+        data = {'type': 'T',
+                'topic': chat.topic}
+        post_to_queue(str(chat.id), json.dumps(data))
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=400)
