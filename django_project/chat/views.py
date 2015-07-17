@@ -40,6 +40,8 @@ def create_chat(request):
 @login_required
 def show_chat(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
+    if request.user not in chat.participants.all():
+        raise PermissionDenied
     participants = chat.participants.all()
     potential_participants = User.objects.exclude(id__in=participants.distinct())
 
