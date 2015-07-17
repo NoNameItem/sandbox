@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -36,10 +37,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'django_project',
 
     'registration',
+    'crispy_forms',
 
     'chat',
 )
@@ -68,6 +69,16 @@ DATABASES = {
         'NAME': 'sandbox.db',
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
+                               "django.core.context_processors.debug",
+                               "django.core.context_processors.i18n",
+                               "django.core.context_processors.media",
+                               "django.core.context_processors.static",
+                               "django.core.context_processors.tz",
+                               "django.contrib.messages.context_processors.messages",
+                               "django_project.contexts.project_list")
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -104,3 +115,6 @@ MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
 
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_URL = '/accounts/login'
+
+PROJECTS = [('/chat/', 'Chat', 'Tornado-based WebSocket chat')]
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

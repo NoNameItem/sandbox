@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ chat.name }}
+{% endblock %}
+
+{% block headers %}
+    <link href="{% static "bootstrap-select/css/bootstrap-select.min.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "bootstrap3-editable/css/bootstrap-editable.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "chat/css/chat_page.css" %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+      <h1>
+          {{ chat.name }}
+          <small>
+            <a href="#" id="topic" data-type="text" data-pk="{{ chat.id }}" data-title="Change topic" data-url="/chat/change_topic/">
+              {{ chat.topic|default:"set topic" }}
+            </a>
+          </small>
+      </h1>
+    </div>
+    <div class="row">
+    	<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 main-col">
+            <div class="well well-lg main">
+                {% for message_block in message_blocks %}
+                    <div class="row message_block">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="right">
+                            <a href="/user/{{ message_block.0.username }}" target="_blank" class="thumbnail">
+                                <img src="
+            	                    {% if message_block.0.userprofile.profile_image %}
+                                        {{ message_block.0.userprofile.profile_image.url }}
+                                    {% else %}
+                                        /media/images/default.jpg
+            	                    {% endif %}
+            	                " alt="Image">
+                            </a>
+                        </div>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                            <div class="alert {% if message_block.0 == user %}alert-success{% else %}alert-info{% endif %} ">
+                                <a href="/user/{{ message_block.0.username }}" target="_blank" class="sender"><strong>{{ message_block.0.username }}</strong></a>
+                                {% for message in message_block.1 %}
+                                    <div>{{ message }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control message" name="message" id="id_message" placeholder="Message">
+                <span class="input-group-btn">
+                    <button class="btn btn-default send-button" type="button">Send</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        	<div class="panel panel-default">
+                <div class="panel-heading">
+        			<h3 class="panel-title">Users</h3>
+        		</div>
+        		<div class="panel-body">
+                    <ul id="id_userlist">
+                        {% for chat_user in chat.get_user_list %}
+                            <li><p><a target="_blank" href="/user/{{ chat_user.username }}/">{{ chat_user.username }}</a></p></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="userlist-control">
+                        <p><button type="button" class="btn btn-default btn-block" id="add_user_button">Add user(s) to chat</button></p>
+                        <p><form action="#" method="post" class="form-inline" role="form" id="add_user_form">
+                            {% csrf_token %}
+                        	<div class="form-group">
+                                <select multiple="multiple" class="selectpicker selectmultiple form-control" id="id_participants" name="participants" title="Select users">
+                                    {% for potential_participant in potential_participants %}
+                                        <option value="{{ potential_participant.id }}">{{ potential_participant.username }}</option>
+                                    {% empty %}
+                                        <option disabled="disabled">All users are already here)</option>
+                                    {% endfor %}
+
+                                </select>
+                        	</div>
+                            <button type="submit" class="btn btn-default">Add</button>
+                            <button type="button" class="btn btn-danger" id="cancel_add_user">Cancel</button>
+                        </form>
+                        </p>
+
+                        <p><a href="/chat/leave/{{ chat.id }}" class="btn btn-danger btn-block">Leave chat</a></p>
+                    </div>
+
+        		</div>
+        	</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "bootstrap-select/js/bootstrap-select.min.js" %}"></script>
+    <script src="{% static "bootstrap3-editable/js/bootstrap-editable.min.js" %}"></script>
+    <script src="{% static "chat/js/chat_page.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            startChat({{ chat.id }}, '{{ user.username }}');
+        })
+    </script>
+{% endblock %}

@@ -17,7 +17,7 @@
         {% if projects %}
             <ul>
             {% for project in projects %}
-                 <p><li><a href="{{ project.link }}"><strong>{{ project.name }}</strong>: {{ project.info }}</a></li></p>
+                 <p><li><a href="{{ project.0 }}"><strong>{{ project.1 }}</strong>: {{ project.2 }}</a></li></p>
             {% endfor %}
             </ul>
         {% else %}

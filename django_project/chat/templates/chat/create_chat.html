@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}
+    start new chat
+{% endblock %}
+
+{% block headers %}
+    <link href="{% static "bootstrap-select/css/bootstrap-select.min.css" %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <form action="#" method="post" role="form">
+        {% csrf_token %}
+    	<legend>Create new chat</legend>
+        {{ form|crispy }}
+
+    	<button type="submit" class="btn btn-default btn-block">Create</button>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "bootstrap-select/js/bootstrap-select.min.js" %}"></script>
+{% endblock %}

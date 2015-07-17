@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    chat list
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+      <h1>Chat list<small><br>Select chat or create a new one</small></h1>
+    </div>
+    <div class="jumbotron">
+    	<div class="container">
+    		<ul>
+            {% for chat in chats %}
+                 <li><p><a href="/chat/{{ chat.id }}/"><strong>{{ chat.name }}</strong>({{ chat.topic }})</a></p></li>
+            {% empty %}
+                <p>There is no chat for you</p>
+    		{% endfor %}
+    		</ul>
+    		<p>
+    			<a class="btn btn-default btn-block" href="/chat/new/">Create new chat</a>
+    		</p>
+    	</div>
+    </div>
+{% endblock %}

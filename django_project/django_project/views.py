@@ -7,13 +7,11 @@ from django.template import RequestContext
 from registration.backends.simple.views import RegistrationView
 from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
+# from settings import PROJECTS
 
 
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
-        new_profile = UserProfile()
-        new_profile.user = user
-        new_profile.save()
         return '/user/{0}'.format(user.username)
 
     def register(self, request, form):
@@ -25,7 +23,7 @@ class MyRegistrationView(RegistrationView):
 
 
 def home(request):
-    return render_to_response('django_project/home.html', {}, RequestContext(request))
+    return render_to_response('django_project/home.html', RequestContext(request))
 
 
 def profile(request, username):
@@ -93,3 +91,7 @@ def change_profile(request, user_id):
                                'profile_form': user_profile_form},
                               RequestContext(request))
 
+
+@login_required
+def my_profile(request):
+    return HttpResponseRedirect("/user/{0}".format(request.user.username))
