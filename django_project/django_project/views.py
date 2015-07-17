@@ -7,7 +7,6 @@ from django.template import RequestContext
 from registration.backends.simple.views import RegistrationView
 from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
-# from settings import PROJECTS
 
 
 class MyRegistrationView(RegistrationView):

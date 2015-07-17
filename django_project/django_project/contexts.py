@@ -1,5 +1,5 @@
 __author__ = 'nonameitem'
-from settings import PROJECTS
+from django_project.settings import PROJECTS
 
 
 def project_list(request):

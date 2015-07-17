@@ -118,6 +118,10 @@ function startChat(chatId, username){
         }
     };
 
+    ws.onclose(function(){
+       setTimeout(function() {startChat(chatId, username)}, 100);
+    });
+
     function sendMessage() {
         var opt = {
             'url': '/chat/post/' + chatId + '/',

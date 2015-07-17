@@ -148,6 +148,8 @@ class WebSocketServer(tornado.websocket.WebSocketHandler):
     def open(self, chat_id):
         """Websocket Connection opened."""
 
+        print("WebSocket opened")
+
         # Initialize new pika client object for this websocket.
         self.pika_client = PikaClient(chat_id)
 
