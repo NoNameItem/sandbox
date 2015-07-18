@@ -40,12 +40,9 @@ class Message(models.Model):
             'photo': photo_url,
             'message': self.text
         })
-    #
-    # def get_self_html(self):
-    #     return self.get_html(style='alert-success')
-    #
-    # def get_other_html(self):
-    #     return self.get_html(style='alert-info')
+
+    def __str__(self):
+        return "[Chat #{0.thread.id}] {0.sender.username}: {0.text}".format(self)
 
 
 def update_last_message(message):

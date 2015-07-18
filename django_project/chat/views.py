@@ -45,19 +45,20 @@ def show_chat(request, chat_id):
     participants = chat.participants.all()
     potential_participants = User.objects.exclude(id__in=participants.distinct())
 
-    messages = chat.message_set.order_by('datetime')[:100]
+    messages = chat.message_set.order_by('-datetime')[:100]
     message_blocks = []
     if len(messages) > 0:
         sender = messages[0].sender
         message_block = []
         for message in messages:
             if message.sender == sender:
-                message_block.append(message.text)
+                # message_block.append(message.text)
+                message_block.insert(0, message.text)
             else:
-                message_blocks.append((sender, message_block))
+                message_blocks.insert(0, (sender, message_block))
                 sender = message.sender
                 message_block = [message.text]
-        message_blocks.append((sender, message_block))
+        message_blocks.insert(0, (sender, message_block))
 
     return render_to_response('chat/show_chat.html',
                               {'chat': chat,

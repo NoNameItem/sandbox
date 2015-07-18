@@ -130,8 +130,10 @@ function startChat(chatId, username){
             'type': 'post',
             'data': {'message': messageField.val()}
         };
-        $.ajax(opt);
-        messageField.val('');
+        if(opt.data.message.length > 0) {
+            $.ajax(opt);
+            messageField.val('');
+        }
     }
 
     $('.send-button').click(sendMessage);
