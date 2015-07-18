@@ -143,8 +143,11 @@ def leave(request, chat_id):
     if request.user not in chat.participants.all():
         raise PermissionDenied
     chat.participants.remove(request.user)
-    data = get_user_lists(chat)
-    post_to_queue(chat_id, json.dumps(data))
+    if len(chat.participants.all()) > 0:
+        data = get_user_lists(chat)
+        post_to_queue(chat_id, json.dumps(data))
+    else:
+        chat.delete()
     return HttpResponseRedirect('/chat/')
 
 
