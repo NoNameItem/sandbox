@@ -51,7 +51,6 @@ def show_chat(request, chat_id):
     messages = chat.message_set.all().order_by('-datetime')[:100]
 
     not_all, oldest_datetime, message_blocks = make_message_blocks(first_message, messages)
-    print(message_blocks)
 
     return render_to_response('chat/show_chat.html',
                               {'chat': chat,
