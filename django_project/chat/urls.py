@@ -9,5 +9,6 @@ urlpatterns = patterns('',
                        url(r'^post/(?P<chat_id>\d+)/$', 'chat.views.post'),
                        url(r'^add_users/(?P<chat_id>\d+)/$', 'chat.views.add_users'),
                        url(r'^leave/(?P<chat_id>\d+)/$', 'chat.views.leave'),
-                       url(r'^change_topic/', 'chat.views.change_topic')
+                       url(r'^change_topic/', 'chat.views.change_topic'),
+                       url(r'^get_previous/(?P<chat_id>\d+)/$', 'chat.views.get_previous'),
                        )
