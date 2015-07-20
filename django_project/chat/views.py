@@ -7,8 +7,6 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.core import serializers
-
 import pika
 
 from chat.models import Chat, Message, update_last_message
