@@ -8,6 +8,7 @@
 {% block headers %}
     <link href="{% static "bootstrap-select/css/bootstrap-select.min.css" %}" rel="stylesheet" type="text/css">
     <link href="{% static "bootstrap3-editable/css/bootstrap-editable.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "ladda-bootstrap/css/ladda-themeless.min.css" %}" rel="stylesheet"  type="text/css">
     <link href="{% static "chat/css/chat_page.css" %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
@@ -25,23 +26,23 @@
     <div class="row">
     	<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 main-col">
             <div class="well well-lg main">
+                {% if not_all %}
+                    <button class="btn btn-block btn-lg ladda-button load-more" data-oldest="{{ oldest_datetime }}"
+                            data-style="slide-up" data-size="l">
+                        <span class="ladda-label">Load more</span>
+                    </button>
+                {% endif %}
                 {% for message_block in message_blocks %}
                     <div class="row message_block">
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="right">
-                            <a href="/user/{{ message_block.0.username }}" target="_blank" class="thumbnail">
-                                <img src="
-            	                    {% if message_block.0.userprofile.profile_image %}
-                                        {{ message_block.0.userprofile.profile_image.url }}
-                                    {% else %}
-                                        /media/images/default.jpg
-            	                    {% endif %}
-            	                " alt="Image">
+                            <a href="/user/{{ message_block.sender }}" target="_blank" class="thumbnail">
+                                <img src="{{ message_block.photo }}" alt="Image">
                             </a>
                         </div>
-                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                            <div class="alert {% if message_block.0 == user %}alert-success{% else %}alert-info{% endif %} ">
-                                <a href="/user/{{ message_block.0.username }}" target="_blank" class="sender"><strong>{{ message_block.0.username }}</strong></a>
-                                {% for message in message_block.1 %}
+                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                            <div class="alert {% if message_block.sender == user.username %}alert-success{% else %}alert-info{% endif %}">
+                                <a href="/user/{{ message_block.sender }}" target="_blank" class="sender"><strong>{{ message_block.sender }}</strong></a>
+                                {% for message in message_block.messages %}
                                     <div>{{ message }}</div>
                                 {% endfor %}
                             </div>
@@ -98,9 +99,14 @@
 {% block scripts %}
     <script src="{% static "bootstrap-select/js/bootstrap-select.min.js" %}"></script>
     <script src="{% static "bootstrap3-editable/js/bootstrap-editable.min.js" %}"></script>
+    <script src="{% static "ladda-bootstrap/js/spin.min.js" %}"></script>
+    <script src="{% static "ladda-bootstrap/js/ladda.min.js" %}"></script>
     <script src="{% static "chat/js/chat_page.js" %}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            {% if oldest_datetime %}
+                oldest = "{{ oldest_datetime }}";
+            {% endif %}
             startChat({{ chat.id }}, '{{ user.username }}');
         })
     </script>

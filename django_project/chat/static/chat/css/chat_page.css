@@ -18,8 +18,29 @@ html, body{
 
 .alert{
     word-break: break-all;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.well{
+    padding: 0;
 }
 
 .message_block{
     height: auto;
+    /*margin-bottom: 10px;*/
+    margin-top: 10px;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.message_block div{
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.load-more{
+    background-color: silver;
+    height: 15%;
+    opacity: 0.5;
 }

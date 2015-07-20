@@ -4,7 +4,6 @@
 
 SLIDE_SPEED = 'fast';
 
-//alert($('input[type=hidden]').val());
 
 $.ajaxSetup({
     headers: {
@@ -12,12 +11,18 @@ $.ajaxSetup({
     }
 });
 
+
 var add_user_button = $('#add_user_button');
 var add_user_form = $('#add_user_form');
 var messageField = $('#id_message');
 var chat;
+var oldest;
+var l;
+var usrname;
+
 
 add_user_form.hide();
+
 
 function scrollDown(){
     var chatWindow = $('.main');
@@ -26,10 +31,12 @@ function scrollDown(){
 
 }
 
+
 function showAddUserForm(){
     add_user_button.slideUp(SLIDE_SPEED);
     add_user_form.slideDown(SLIDE_SPEED);
 }
+
 
 function hideUserForm(){
     $('.selectpicker').selectpicker('deselectAll');
@@ -37,42 +44,22 @@ function hideUserForm(){
     add_user_button.slideDown(SLIDE_SPEED);
 }
 
-add_user_button.bind('click', showAddUserForm);
-$('#cancel_add_user').bind('click', hideUserForm);
-$(document).ready(function(){
-    $.fn.editable.defaults.mode = 'inline';
-    $('#topic').editable();
-    scrollDown();
-});
 
-add_user_form.bind('submit', function(event){
-    event.preventDefault();
-    var opt = {
-        'url': '/chat/add_users/' + chat + '/',
-        'type': 'post',
-        'data': {'selected': JSON.stringify($('.selectpicker').val())}
-    };
-    if(opt.data.selected != 'null') {
-        $.ajax(opt);
-        hideUserForm();
-    }
-});
-
-function getMessageBlock(self, message){
+function getMessageBlock(self, sender, photo, text){
     var block = $(
         '<div class="row message_block">' +
             '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="right">' +
-                '<a href="/user/' + message.username + '" target="_blank" class="thumbnail">' +
-                    '<img src="' + message.photo + '" alt="Image">' +
+                '<a href="/user/' + sender + '" target="_blank" class="thumbnail">' +
+                    '<img src="' + photo + '" alt="Image">' +
                 '</a>' +
             '</div>' +
         '</div>'
         );
-    var textBlock = $('<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"></div>');
+    var textBlock = $('<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10"></div>');
     var messages = $(
         '<div class="alert">' +
-            '<a href="/user/' + message.username + '" target="_blank" class="sender"><strong>' + message.username + '</strong></a>' +
-            '<div>' + message.message + '</div>' +
+            '<a href="/user/' + sender + '" target="_blank" class="sender"><strong>' + sender + '</strong></a>' +
+            '<div>' + text + '</div>' +
         '</div'
     );
     messages.addClass(self ? 'alert-success' : 'alert-info');
@@ -81,6 +68,7 @@ function getMessageBlock(self, message){
     return block;
 }
 
+
 function populateUsers(users){
     var userList = $('#id_userlist');
     userList.find('> li').remove();
@@ -88,6 +76,7 @@ function populateUsers(users){
         $('<li><p><a href="/user/' + users[i] + '" target="_blank">' + users[i] + '</a></p></li>').appendTo(userList);
     }
 }
+
 
 function populatePotentialUsers(users){
     var selector = $('.selectpicker');
@@ -98,8 +87,55 @@ function populatePotentialUsers(users){
     selector.selectpicker('refresh');
 }
 
+
+function insertToBeginning(data, status, xhr){
+    if(!data.not_all){
+        $('.load-more').remove();
+    }
+
+    oldest = data.oldest_datetime;
+
+    var chatWindow = $('.main');
+    var prevHeight = chatWindow.prop('scrollHeight');
+
+    var first_block = $('.message_block').first();
+    var first_sender = $('.sender').first().text();
+    for(var i = data.message_blocks.length - 1; i >= 0; i--){
+        var message_block = data.message_blocks[i];
+        var messages = message_block.messages;
+        if(message_block.sender == first_sender){
+            for(var j = messages.length - 1; j >= 0; j--){
+                $('<div>' + messages[j] + '</div>').insertAfter($('.sender').first());
+            }
+        } else {
+            var new_block = getMessageBlock(message_block.sender == usrname, message_block.sender,
+                message_block.photo, message_block.messages[0]);
+            for(var j = 1; j < messages.length; j++){
+                $('<div>' + messages[j] + '</div>').appendTo(new_block.find('.alert'));
+            }
+            new_block.insertBefore(first_block);
+            first_block = new_block;
+            first_sender = first_block.find('a').first().text();
+        }
+    }
+    chatWindow.scrollTop(chatWindow.prop('scrollHeight') - prevHeight);
+}
+
+function getPrevious(){
+    var opt = {
+        'url': '/chat/get_previous/' + chat + '/',
+        'type': 'get',
+        'data': {'oldest': oldest},
+        'success': insertToBeginning,
+        'complete': l.stop
+    };
+    $.ajax(opt);
+}
+
+
 function startChat(chatId, username){
     chat = chatId;
+    usrname = username;
     var ws = new WebSocket('ws://localhost:8889/chat/' + chatId + '/');
     ws.onmessage = function(event){
         var mess = JSON.parse(event.data);
@@ -145,3 +181,33 @@ function startChat(chatId, username){
     })
 
 }
+
+
+add_user_button.bind('click', showAddUserForm);
+
+$('#cancel_add_user').bind('click', hideUserForm);
+
+add_user_form.bind('submit', function(event){
+    event.preventDefault();
+    var opt = {
+        'url': '/chat/add_users/' + chat + '/',
+        'type': 'post',
+        'data': {'selected': JSON.stringify($('.selectpicker').val())}
+    };
+    if(opt.data.selected != 'null') {
+        $.ajax(opt);
+        hideUserForm();
+    }
+});
+
+$('.load-more').bind('click', function(event){
+    l = Ladda.create(this);
+    l.start();
+    setTimeout(getPrevious, 1000);
+});
+
+$(document).ready(function(){
+    $.fn.editable.defaults.mode = 'inline';
+    $('#topic').editable();
+    scrollDown();
+});
