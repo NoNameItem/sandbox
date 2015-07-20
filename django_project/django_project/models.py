@@ -24,5 +24,9 @@ class UserProfile(models.Model):
         self.profile_image.save(filename, f)
         self.save()
 
+    @property
+    def image_url(self):
+        return self.profile_image.url if self.profile_image else "/media/images/default.jpg"
+
     def __str__(self):
         return self.user.username
