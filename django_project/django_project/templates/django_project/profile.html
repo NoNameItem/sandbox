@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     {% if self %}
@@ -9,7 +10,31 @@
     {% endif %}
 {% endblock %}
 
+{% block headers %}
+    <link href="{% static "django_project/css/profile.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
+<div class="modal fade" id="modal-new-chat">
+  	<div class="modal-dialog">
+   		<div class="modal-content">
+   			<div class="modal-header">
+   				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+   				<h4 class="modal-title">Create new chat</h4>
+   			</div>
+   			<div class="modal-body">
+   				<form action="#" method="post" role="form" id="new-chat-form">
+                    {% csrf_token %}
+   					{{ private_chat_form|crispy }}
+   				</form>
+   			</div>
+   			<div class="modal-footer">
+   				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+   				<button type="button" class="btn btn-primary" id="new-chat-submit">Start new chat</button>
+   			</div>
+   		</div><!-- /.modal-content -->
+   	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <div class="page-header">
   <h1>{{ get_user.username }}<small>'s profile</small></h1>
 </div>
@@ -31,14 +56,52 @@
                 {% csrf_token %}
                 <label for="id_image" class="hidden">Image:</label>
                 <input type="file" id="id_image" class="hidden" name="image">
-                <button class="btn btn-default" id="change_photo" type="submit">Change photo</button>
-
-
+                <button class="btn btn-default btn-block" id="change_photo" type="submit">Change photo</button>
             </form>
+        {% else %}
+            {% if user.is_authenticated %}
+                <div class="btn-group-vertical btn-block" role="group">
+                    <div class=" btn-group btn-block">
+                        <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+                            Private chat <span class="caret"></span>
+                        </a>
+    		            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="#">Private chats</a>
+                                <ul class="dropdown-menu">
+                                    {% for private_chat in private_chats %}
+                                        <li><a href="/chat/{{ private_chat.id }}" target="_blank">
+                                            {{ private_chat.name }}
+                                        </a></li>
+                                    {% endfor %}
+                                    <li class="divider"></li>
+                                    <li><a href="#">Merge private chats</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a role="button" data-toggle="modal" data-target="#modal-new-chat">Start new private chat</a>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div class=" btn-group btn-block">
+                        <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+                            Invite to chat <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Second level</a></li>
+                            <li><a href="#">Second level</a></li>
+                            <li><a href="#">Second level</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Second level</a></li>
+                        </ul>
+                    </div>
+                </div>
+             {% endif %}
         {% endif %}
         </div>
 
-    <div class="col-md-8">
+    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
         <div class="panel panel-default">
         	  <div class="panel-heading">
         			<h3 class="panel-title">Info</h3>
@@ -73,5 +136,13 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static "django_project/js/change_photo.js" %}"></script>
+    <script src="{% static "django_project/js/profile.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            userId = {{ get_user.id }};
+            {% if open_new_chat_form %}
+            $('#modal-new-chat').modal('show');
+            {% endif %}
+        });
+    </script>
 {% endblock %}
