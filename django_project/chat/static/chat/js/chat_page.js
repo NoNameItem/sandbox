@@ -143,7 +143,7 @@ function startChat(chatId, username){
             if(mess.username == $('.sender').last().text()){
                 $('<div>' + mess.message + '</div>').appendTo($('.alert').last());
             } else {
-                var newBlock = getMessageBlock(mess.username == username, mess);
+                var newBlock = getMessageBlock(mess.username == username, mess.username, mess.photo, mess.message);
                 newBlock.appendTo($('.main'));
             }
             scrollDown();
