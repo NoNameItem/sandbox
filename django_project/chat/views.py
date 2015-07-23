@@ -41,17 +41,19 @@ def create_chat(request):
 
 @login_required
 def show_chat(request, chat_id):
+    message_blocks = None
+    not_all = False
+    oldest_datetime = datetime.datetime.now()
     chat = get_object_or_404(Chat, id=chat_id)
     if request.user not in chat.participants.all():
         raise PermissionDenied
     participants = chat.participants.all()
     potential_participants = User.objects.exclude(id__in=participants.distinct())
 
-    first_message = chat.message_set.order_by('datetime')[0]
     messages = chat.message_set.all().order_by('-datetime')[:100]
-
-    not_all, oldest_datetime, message_blocks = make_message_blocks(first_message, messages)
-    print(message_blocks)
+    if messages.count() > 0:
+        first_message = chat.message_set.order_by('datetime')[0]
+        not_all, oldest_datetime, message_blocks = make_message_blocks(first_message, messages)
 
     return render_to_response('chat/show_chat.html',
                               {'chat': chat,
