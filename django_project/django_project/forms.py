@@ -4,6 +4,7 @@ from django_project.models import UserProfile
 
 __author__ = 'nonameitem'
 
+
 class UserForm(forms.ModelForm):
 
     class Meta:
