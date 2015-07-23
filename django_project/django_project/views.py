@@ -2,11 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from registration.backends.simple.views import RegistrationView
 from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
+from chat.models import Chat
+from chat.forms import PrivateChatForm
 
 
 class MyRegistrationView(RegistrationView):
@@ -25,19 +27,49 @@ def home(request):
     return render_to_response('django_project/home.html', RequestContext(request))
 
 
-def profile(request, username):
-    context = RequestContext(request)
-    logged_user = request.user
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        raise Http404
+def get_private_chats(user1, user2):
+    chats = Chat.objects.all()
+    private_chats = []
+    for chat in chats:
+        if user1 in chat.participants.all() and user2 in chat.participants.all() and chat.participants.count() == 2:
+            private_chats.append(chat)
+    return private_chats
 
+
+def profile(request, username):
+    private_chats = None
+    private_chat_form = None
+    open_new_chat_form = False
+    context = RequestContext(request)
+
+    logged_user = request.user
+    user = get_object_or_404(User, username=username)
     user_profile = UserProfile.objects.filter(user=user)[0]
+
+    if request.user != user:
+        private_chats = get_private_chats(request.user, user)
+        if request.method != 'POST':
+            new_private_chat = Chat()
+            new_private_chat.name = "{0} <-> {1}".format(request.user.username, user.username)
+            private_chat_form = PrivateChatForm(instance=new_private_chat)
+        else:
+            private_chat_form = PrivateChatForm(request.POST)
+            if private_chat_form.is_valid():
+                new_private_chat = private_chat_form.save()
+                new_private_chat.participants.add(request.user)
+                new_private_chat.participants.add(user)
+                new_private_chat.save()
+                return HttpResponseRedirect("/chat/{0}".format(new_private_chat.id))
+            else:
+                open_new_chat_form = True
+
     return render_to_response("django_project/profile.html",
                               {"self": logged_user == user,
                                "get_user": user,
-                               "user_profile": user_profile},
+                               "user_profile": user_profile,
+                               "private_chats": private_chats,
+                               "private_chat_form": private_chat_form,
+                               "open_new_chat_form": open_new_chat_form},
                               context)
 
 

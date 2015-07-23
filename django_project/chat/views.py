@@ -7,6 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.core import serializers
 
 import pika
 
@@ -50,6 +51,7 @@ def show_chat(request, chat_id):
     messages = chat.message_set.all().order_by('-datetime')[:100]
 
     not_all, oldest_datetime, message_blocks = make_message_blocks(first_message, messages)
+    print(message_blocks)
 
     return render_to_response('chat/show_chat.html',
                               {'chat': chat,
