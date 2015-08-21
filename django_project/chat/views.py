@@ -7,12 +7,11 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.core import serializers
 
 import pika
 
 from chat.models import Chat, Message, update_last_message
-from chat.forms import ChatForm
+from chat.forms import ChatForm, get_merge_form
 
 
 @login_required
@@ -31,7 +30,7 @@ def create_chat(request):
             chat = form.save()
             if request.user not in chat.participants.all():
                 chat.participants.add(request.user)
-            return HttpResponseRedirect('/chat/')
+            return HttpResponseRedirect('/chat/{0}'.format(chat.id))
     else:
         form = ChatForm()
     return render_to_response('chat/create_chat.html',
@@ -209,3 +208,37 @@ def get_previous(request, chat_id):
                                               'message_blocks': message_blocks})
     else:
         return JsonResponse(status=400, data={'message': "Please use GET"})
+
+
+@login_required
+def merge_private(request, user_id):
+    user = request.user
+    other = get_object_or_404(User, id=user_id)
+    form_class = get_merge_form(user, other)
+    if request.method == 'POST':
+        form = form_class(request.POST)
+        if form.is_valid():
+            new_chat = Chat()
+            new_chat.name = form.cleaned_data['new_title']
+            new_chat.topic = form.cleaned_data['new_topic']
+            new_chat.save()
+            new_chat.participants.add(user)
+            new_chat.participants.add(other)
+            chats = form.cleaned_data['chats']
+            messages = Message.objects.none()
+            for chat in chats:
+                messages = messages | chat.message_set.all()
+            messages = messages.order_by('datetime')
+            for message in messages:
+                message.thread = new_chat
+                message.save()
+            new_chat.save()
+            for chat in chats:
+                chat.delete()
+            return HttpResponseRedirect('/chat/{0}'.format(new_chat.id))
+    else:
+        form = form_class()
+    return render_to_response('chat/merge_private.html',
+                              {'form': form,
+                               'other': other.username},
+                              RequestContext(request))

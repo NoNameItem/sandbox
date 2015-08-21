@@ -1,14 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from registration.backends.simple.views import RegistrationView
+
 from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
 from chat.models import Chat
 from chat.forms import PrivateChatForm
+from utils import get_private_chats
 
 
 class MyRegistrationView(RegistrationView):
@@ -25,15 +27,6 @@ class MyRegistrationView(RegistrationView):
 
 def home(request):
     return render_to_response('django_project/home.html', RequestContext(request))
-
-
-def get_private_chats(user1, user2):
-    chats = Chat.objects.all()
-    private_chats = []
-    for chat in chats:
-        if user1 in chat.participants.all() and user2 in chat.participants.all() and chat.participants.count() == 2:
-            private_chats.append(chat)
-    return private_chats
 
 
 def profile(request, username):
