@@ -19,6 +19,9 @@ class Chat(models.Model):
     def get_user_list(self):
         return self.participants.all().order_by('username')
 
+    def get_choice(self):
+        return self.id, "{0} ({1})".format(self.name, self.topic)
+
 
 class Message(models.Model):
     text = models.TextField()
