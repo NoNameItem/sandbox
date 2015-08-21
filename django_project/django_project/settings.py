@@ -38,10 +38,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_project',
-
+    #
     'registration',
     'crispy_forms',
-
+    #
     'chat',
 )
 

@@ -10,7 +10,7 @@ from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
 from chat.models import Chat
 from chat.forms import PrivateChatForm
-from utils import get_private_chats
+from chat.utils import get_private_chats
 
 
 class MyRegistrationView(RegistrationView):
