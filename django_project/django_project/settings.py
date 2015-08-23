@@ -38,11 +38,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_project',
-    #
     'registration',
     'crispy_forms',
-    #
     'chat',
+    'snippetalk'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -116,5 +115,6 @@ MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_URL = '/accounts/login'
 
-PROJECTS = [('/chat/', 'Chat', 'Tornado-based WebSocket chat')]
+PROJECTS = (('/chat/', 'Chat', 'Tornado-based WebSocket chat'),
+            ('/snippetalk/', 'SnippeTalk', 'Share, read and comment code snippets'))
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
                        url(r'^accounts/profile/$', 'django_project.views.my_profile'),
                        url(r'^accounts/', include('registration.backends.simple.urls')),
                        url(r'^chat/', include('chat.urls')),
+                       url(r'^snippetalk/', include('snippetalk.urls')),
 
                        url(r'^$', 'django_project.views.home', name='home'),
                        url(r'^user/(?P<username>\w+)/$', views.profile),
