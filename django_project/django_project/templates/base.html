@@ -21,7 +21,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Home</a>
+            <a class="navbar-brand" href="/">Sandbox</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -29,7 +29,7 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        {% block project %}Projects{% endblock %}
+                        {% block project %}Home{% endblock %}
                         <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for project in projects %}
@@ -37,9 +37,13 @@
                         {% endfor %}
                     </ul>
                 </li>
+            {% block project_navbar %}{% endblock %}
             </ul>
 
+
+
             <ul class="nav navbar-nav navbar-right">
+            {% block project_navbar_right %}{% endblock %}
                 {% if user.is_authenticated %}
                     <li><a href="/user/{{ user.username }}">Profile</a></li>
                     <li><a href="{% url 'auth_logout' %}?next=/">Log Out</a></li>
