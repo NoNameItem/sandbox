@@ -14,7 +14,7 @@ class Snippet(models.Model):
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    public = models.BooleanField(default=True)
+    public = models.BooleanField(default=True, choices=((True, 'Public'), (False, 'Private')), verbose_name="Publicity")
     name = models.CharField(max_length=100, default="Untitled")
     description = models.TextField(blank=True)
     language = models.IntegerField(choices=LANGUAGE_CHOICES, default=PLAIN_TEXT)
@@ -23,7 +23,7 @@ class Snippet(models.Model):
     @property
     def highlighted(self):
         lexer = get_lexer_by_name(LEXERS[self.get_language_display()])
-        return highlight(self.code, lexer, HtmlFormatter)
+        return highlight(self.code, lexer, HtmlFormatter())
 
 
 class Comment(models.Model):
@@ -32,3 +32,4 @@ class Comment(models.Model):
     text = models.TextField()
     language = models.IntegerField(choices=LANGUAGE_CHOICES, default=PLAIN_TEXT)
     code = models.TextField(blank=True)
+

@@ -1,0 +1,31 @@
+{% extends "snippetalk/snippetalk.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ snippet.name }} by {{ snippet.author.username |default:"Anonymous" }}
+{% endblock %}
+
+{% block headers %}
+    <link href="{% static "snippetalk/css/highlight.css" %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>
+            {{ snippet.name }}<br>
+            <small>
+                by
+                {% if snippet.author %}
+                    <a href="/user/{{ snippet.author.username }}/">{{ snippet.author.username }}</a>
+                {% else %}
+                    Anonymous
+                {% endif %}
+                <br>
+            <small>
+                 created: {{ snippet.created }}, modified: {{ snippet.modified }}, language: {{ snippet.get_language_display }}
+            </small>
+            </small>
+        </h1>
+    </div>
+    {{ snippet.highlighted|safe }}
+{% endblock %}

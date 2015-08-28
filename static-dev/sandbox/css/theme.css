@@ -15,3 +15,22 @@ border-left: 1px solid #f0f0f0;
     display: none;
   }
 }
+
+.list-group {
+    border-radius: 4px;
+     -webkit-box-shadow: 0 0 0;
+     box-shadow: 0 0 0;
+}
+
+.list-group-item {
+    border-left: 0;
+    border-right: 0;
+
+}
+.list-group-item:last-child {
+    border-bottom: 0;
+}
+
+.list-group-item:first-child {
+    border-top: 0;
+}

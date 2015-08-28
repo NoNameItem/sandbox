@@ -1,0 +1,18 @@
+{% extends "snippetalk/snippetalk.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Create snippet.
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    	<form action="#" method="post" role="form">
+        {% csrf_token %}
+    	<legend>Create new snippet</legend>
+        {{ form|crispy }}
+    	<button type="submit" class="btn btn-default btn-block">Create</button>
+    </form>
+    </div>
+
+{% endblock %}
