@@ -1,0 +1,118 @@
+{% extends "snippetalk/snippetalk.html" %}
+{% load staticfiles %}
+
+{% block title %}
+  {{ snippet.name }} by {{ snippet.author.username |default:"Anonymous" }}
+{% endblock %}
+
+{% block headers %}
+  <link href="{% static "bootstrap3-editable/css/bootstrap-editable.css" %}" rel="stylesheet"
+        type="text/css">
+  <link href="{% static "select2/css/select2.min.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "select2/css/select2-bootstrap.min.css" %}" rel="stylesheet"
+        type="text/css">
+  <link href="{% static "ladda-bootstrap/css/ladda-themeless.min.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "snippetalk/css/highlight.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "snippetalk/css/snippetalk.css" %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+  {% csrf_token %}
+
+  <div class="page-header">
+    <h1>
+      <a href="#" id="name" data-type="text" data-pk="{{ snippet.id }}"
+              >{{ snippet.name | default:"Untitled"}}</a><br>
+      <small>
+        {% if snippet %}
+          by
+          {% if snippet.author %}
+            <a href="/user/{{ snippet.author.username }}/">{{ snippet.author.username }}</a>
+          {% else %}
+            Anonymous
+          {% endif %}
+          <br>
+        {% endif %}
+
+        <small>
+          {% if snippet %}
+            created: {{ snippet.created }}, modified: {{ snippet.modified }},
+          {% endif %}
+          language: <a href="#" id="lang" data-type="select2"
+                       data-value="{{ snippet.language|default:plain_text }}"
+                       data-inputclass="ccc">
+          {{ snippet.get_language_display|default:"Text only" }}</a>,
+          privacy: <a href="#" id="public" data-type="select2"
+                      data-value="{{ snippet.public|default:1 }}">
+          {{ snippet.get_public_display|default:"Public" }}</a>
+        </small>
+      </small>
+    </h1>
+  </div>
+  <div class="panel panel-default panel-code">
+    <div class="panel-body">
+      {# #######################TOOLBAR################################ #}
+      <div class="row tools">
+        <ul class="nav navbar-nav nav-pils navbar-right">
+          {% if mine %}
+            <li role="presentation">
+              <a href="#" class="btn" id="save">
+                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+              </a>
+            </li>
+            {% if snippet %}
+              <li role="presentation">
+                <a href="/snippetalk/delete/{{ snippet.id }}/" class="btn" id="delete">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </a>
+              </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+        <ul class="nav nav-tabs" id="code-tabs" role="tablist">
+          <li role="presentation" class="active" id="highlight_tab">
+            <a href="#highlight" aria-controls="highlight" role="tab" data-toggle="tab">Snippet</a>
+          </li>
+          <li role="presentation" id="raw_tab">
+            <a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a>
+          </li>
+          <li role="presentation" id="desc_tab">
+            <a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Description</a></li>
+        </ul>
+      </div>
+      {#  ###################TOOLBAR END############################  #}
+      <div class="tab-content">
+        <div class="highlight tab-pane fade in active" id="highlight" role="tabpanel">
+          <ol>{{ snippet.highlighted | safe }}</ol>
+          <div class="shadow" style="display: none" id="code-shadow"></div>
+        </div>
+        <div id="raw" class="tab-pane fade" role="tabpanel">
+          <form>
+                <textarea class="form-control" id="raw-ta" {% if not mine %}readonly
+                {% endif %}>{{ snippet.code }}</textarea>
+          </form>
+        </div>
+        <div id="desc" class="tab-pane fade" role="tabpanel">
+          <form>
+            <textarea class="form-control" id="desc-ta" {% if not mine %}readonly{% endif %}
+                    >{{ snippet.description }}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <textarea id="raw-ta-hidden" class="hidden">{{ snippet.code }}</textarea>
+  <textarea id="snippet-id" class="hidden">{{ snippet.id }}</textarea>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "bootstrap3-editable/js/bootstrap-editable.min.js" %}"></script>
+  <script src="{% static "select2/js/select2.full.js" %}"></script>
+  <script src="{% static "snippetalk/js/snippetalk.js" %}"></script>
+  <script src="{% static "ladda-bootstrap/js/spin.min.js" %}"></script>
+  <script src="{% static "ladda-bootstrap/js/ladda.min.js" %}"></script>
+  <script>
+    mine = {{ mine | lower}};
+    data_source = {{ langs | safe }};
+  </script>
+{% endblock %}

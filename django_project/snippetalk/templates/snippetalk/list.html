@@ -15,7 +15,10 @@
             <h4 class="list-group-item-heading">
                 {{ snippet.name }}<br>
                 <small>
-                    author: {{ snippet.author }}, created: {{ snippet.created }}, modified: {{ snippet.modified }},
+                    author: {{ snippet.author|default:"Anonymous" }}, created:
+                  {{ snippet.created }},
+                  modified:
+                  {{ snippet.modified }},
                     language: {{ snippet.get_language_display }}
                 </small>
             </h4>
