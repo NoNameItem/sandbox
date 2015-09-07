@@ -10,3 +10,6 @@ class SnippetForm(forms.ModelForm):
             'public': forms.RadioSelect()
         }
 
+
+class FileForm(forms.Form):
+    file = forms.FileField()

@@ -177,7 +177,7 @@ def change_topic(request):
         try:
             chat = Chat.objects.get(id=request.POST['pk'])
         except Chat.DoesNotExist:
-            return HttpResponse(status=404)
+            return HttpResponse("Chat not found", status=404)
         if request.user not in chat.participants.all():
             raise PermissionDenied
         chat.topic = request.POST['value']
@@ -187,7 +187,7 @@ def change_topic(request):
         post_to_queue(str(chat.id), json.dumps(data))
         return HttpResponse(status=200)
     else:
-        return HttpResponse(status=400)
+        return HttpResponse("Bad request", status=400)
 
 
 @login_required

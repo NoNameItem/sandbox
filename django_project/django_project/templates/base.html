@@ -17,7 +17,7 @@
 <body>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="container">
+{#  <div class="container">#}
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -58,10 +58,13 @@
       </ul>
     </div>
     <!-- /.navbar-collapse -->
-  </div>
+{#  </div>#}
 </nav>
 <div class="container">
   <div class='notifications top-right' id="tr-notify" style="margin-top: 30px"></div>
+  <div class='notifications top-left' id="tl-notify" style="margin-top: 30px"></div>
+  <div class='notifications bottom-left' id="bl-notify" style="margin-top: 30px"></div>
+  <div class='notifications bottom-right' id="br-notify" style="margin-top: 30px"></div>
   {% block content %}{% endblock %}
 </div>
 
@@ -70,6 +73,7 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
 <script src="{% static "bootstrap-notify/js/bootstrap-notify.js" %}"></script>
+<script src="{% static "sandbox/alerts/js/alerts.js" %}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

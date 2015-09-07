@@ -4,22 +4,22 @@ body {
 }
 
 .navbar .divider-vertical {
-height: 50px;
-margin: 0 9px;
-border-right: 1px solid #f2f2f2;
-border-left: 1px solid #f0f0f0;
+    height: 50px;
+    margin: 0 9px;
+    border-right: 1px solid #f2f2f2;
+    border-left: 1px solid #f0f0f0;
 }
 
 @media (max-width: 767px) {
-.navbar-collapse .nav > .divider-vertical {
-    display: none;
-  }
+    .navbar-collapse .nav > .divider-vertical {
+        display: none;
+    }
 }
 
 .list-group {
     border-radius: 4px;
-     -webkit-box-shadow: 0 0 0;
-     box-shadow: 0 0 0;
+    -webkit-box-shadow: 0 0 0;
+    box-shadow: 0 0 0;
 }
 
 .list-group-item {
@@ -33,4 +33,12 @@ border-left: 1px solid #f0f0f0;
 
 .list-group-item:first-child {
     border-top: 0;
+}
+
+.navbar-right {
+    margin-right: 0;
+}
+
+.page-header {
+    border-bottom: 1px solid #ddd;
 }

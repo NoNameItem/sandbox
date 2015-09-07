@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-  {{ snippet.name }} by {{ snippet.author.username |default:"Anonymous" }}
+  {{ title }}
 {% endblock %}
 
 {% block headers %}
@@ -22,7 +22,7 @@
   <div class="page-header">
     <h1>
       <a href="#" id="name" data-type="text" data-pk="{{ snippet.id }}"
-              >{{ snippet.name | default:"Untitled"}}</a><br>
+        >{{ snippet.name | default:"Untitled"}}</a><br>
       <small>
         {% if snippet %}
           by
@@ -35,8 +35,11 @@
         {% endif %}
 
         <small>
-          {% if snippet %}
-            created: {{ snippet.created }}, modified: {{ snippet.modified }},
+          {% if snippet.created %}
+            created: {{ snippet.created }},
+          {% endif %}
+          {% if snippet.modified %}
+            modified: <span id="modified">{{ snippet.modified }}</span>
           {% endif %}
           language: <a href="#" id="lang" data-type="select2"
                        data-value="{{ snippet.language|default:plain_text }}"
@@ -54,15 +57,43 @@
       {# #######################TOOLBAR################################ #}
       <div class="row tools">
         <ul class="nav navbar-nav nav-pils navbar-right">
+          {% if not snippet %}
+            <form enctype="multipart/form-data" method="post" name="fileform">
+            {% csrf_token %}
+            <input type="file" id="file" name="file" class="hidden">
+            </form>
+             <li role="presentation">
+              <a class="btn" data-toggle="tooltip" data-placement="bottom" title="Upload" id="upload">
+                <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+              </a>
+            </li>
+          {% endif %}
+          {% if snippet.id %}
+            <li role="presentation">
+              <a href="/snippetalk/download/{{ snippet.id }}/" class="btn" data-toggle="tooltip"
+                 data-placement="bottom" title="Download">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li role="presentation">
+              <a href="/snippetalk/fork/{{ snippet.id }}/" class="btn" data-toggle="tooltip"
+                 data-placement="bottom"
+                 title="Fork">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+              </a>
+            </li>
+          {% endif %}
           {% if mine %}
             <li role="presentation">
-              <a href="#" class="btn" id="save">
+              <a class="btn" id="save" data-toggle="tooltip" data-placement="bottom"
+                 title="Save">
                 <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
               </a>
             </li>
-            {% if snippet %}
+            {% if snippet.id %}
               <li role="presentation">
-                <a href="/snippetalk/delete/{{ snippet.id }}/" class="btn" id="delete">
+                <a href="/snippetalk/delete/{{ snippet.id }}/" class="btn" id="delete"
+                   data-toggle="tooltip" data-placement="bottom" title="Delete">
                   <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </a>
               </li>
@@ -95,14 +126,41 @@
         <div id="desc" class="tab-pane fade" role="tabpanel">
           <form>
             <textarea class="form-control" id="desc-ta" {% if not mine %}readonly{% endif %}
-                    >{{ snippet.description }}</textarea>
+              >{{ snippet.description }}</textarea>
           </form>
         </div>
       </div>
     </div>
   </div>
+  {#  Snippet ends  #}
+  {#  Comment Area  #}
+  {% if snippet.id %}
+    <div class="page-header">
+      <h3>
+        Comments(<span id="comment-count">{{ snippet.comments.count }}</span>)
+        {% if snippet.comments.count %}
+          <span class="round" data-toggle="tooltip" data-placement="bottom" title="Collapse">
+            <span class="glyphicon glyphicon-chevron-down btn btn-default round expand" data-toggle="collapse"
+                  data-target=".comments.all"></span>
+          </span>
+        {% endif %}
+        <span class="round" data-toggle="tooltip" data-placement="bottom" title="Add Comment">
+          <span class="glyphicon glyphicon-share-alt btn btn-success round " id="comment" data-id></span>
+        </span>
+      </h3>
+
+    </div>
+
+
+    <div class="list-group comments all collapse in" id="answers-0">
+      {% for comment in snippet.top_level_comments %}
+        {{ comment.render }}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {#  End of Comment Area  #}
   <textarea id="raw-ta-hidden" class="hidden">{{ snippet.code }}</textarea>
-  <textarea id="snippet-id" class="hidden">{{ snippet.id }}</textarea>
+  <input type="text" id="snippet-id" class="hidden" value="{{ snippet.id|default_if_none:'' }}"/>
 {% endblock %}
 
 {% block scripts %}
