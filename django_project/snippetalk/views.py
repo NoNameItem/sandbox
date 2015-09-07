@@ -1,4 +1,5 @@
 import os
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -10,6 +11,15 @@ from django.template import RequestContext
 from snippetalk.forms import SnippetForm, FileForm
 from snippetalk.models import Snippet, Comment
 from snippetalk.utils import LANGUAGE_CHOICES, LANG_JS, highlight, PLAIN_TEXT, parse_filename
+
+
+# url regex from http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+URL_REGEX = re.compile(r'''(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s\
+()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))''')
+
+
+def wrap_links(text):
+    return URL_REGEX.sub(lambda x: '<a href="{0}">{0}</a>'.format(x.group(0)), text)
 
 
 def recent(request):
@@ -134,7 +144,7 @@ def comment(request):
             snippet = Snippet.objects.get(id=int(request.POST['id']))
             parent = Comment.objects.get(id=int(request.POST['parent'])) if request.POST['parent'] else None
             comm = Comment()
-            comm.text = request.POST['comment']
+            comm.text = wrap_links(request.POST['comment'])
             comm.author = request.user if request.user.is_authenticated() else None
             comm.to_snippet = snippet
             comm.parent = parent
