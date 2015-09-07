@@ -7,16 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('snippetalk', '0007_merge'),
+        ('snippetalk', '0012_auto_20150905_2055'),
     ]
 
     operations = [
-        migrations.RemoveField('snippet', 'public'),
         migrations.AddField(
-            model_name='snippet',
-            name='public',
-            field=models.IntegerField(default=True, choices=[(1, 'Public'), (0, 'Private')], verbose_name='Publicity'),
+            model_name='comment',
+            name='level',
+            field=models.IntegerField(default=0),
             preserve_default=True,
-
         ),
     ]

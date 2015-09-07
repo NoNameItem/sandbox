@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'registration',
     'crispy_forms',
     'chat',
-    'snippetalk'
+    'snippetalk',
 )
 
 MIDDLEWARE_CLASSES = (
