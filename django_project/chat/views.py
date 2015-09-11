@@ -1,5 +1,6 @@
 import json
 import datetime
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,11 +8,19 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-
 import pika
 
 from chat.models import Chat, Message, update_last_message
 from chat.forms import ChatForm, get_merge_form
+
+
+# url regex from http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+URL_REGEX = re.compile(r'''(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s\
+()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))''')
+
+
+def wrap_links(text):
+    return URL_REGEX.sub(lambda x: '<a href="{0}">{0}</a>'.format(x.group(0)), text)
 
 
 @login_required
@@ -96,7 +105,7 @@ def post(request, chat_id):
             raise PermissionDenied
 
         message = Message()
-        message.text = request.POST['message']
+        message.text = wrap_links(request.POST['message'])
         message.sender = request.user
         message.thread = chat
         message.save()

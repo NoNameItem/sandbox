@@ -29,9 +29,6 @@ class Message(models.Model):
     thread = models.ForeignKey(Chat)
     datetime = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    # def get_html(self, style=''):
-    #     return render_to_string('chat/message.html', {'message': self, 'style': style})
-
     def get_json_string(self):
         if self.sender.userprofile.profile_image:
             photo_url = self.sender.userprofile.profile_image.url

@@ -43,7 +43,7 @@
                             <div class="alert {% if message_block.sender == user.username %}alert-success{% else %}alert-info{% endif %}">
                                 <a href="/user/{{ message_block.sender }}" target="_blank" class="sender"><strong>{{ message_block.sender }}</strong></a>
                                 {% for message in message_block.messages %}
-                                    <div>{{ message }}</div>
+                                    <div>{{ message|safe }}</div>
                                 {% endfor %}
                             </div>
                         </div>
