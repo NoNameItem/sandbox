@@ -78,6 +78,7 @@ def show(request, snippet_id=None, fork=False):
                 fork.author = request.user
             fork.public = 1
             fork.code = snippet.code
+            fork.language = snippet.language
             snippet = fork
             mine = True
     except Snippet.DoesNotExist:
