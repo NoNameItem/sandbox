@@ -27,7 +27,8 @@ def wrap_links(text):
 def show_chat_list(request):
     chats = Chat.objects.filter(participants=request.user).order_by('-last_message_time')
     return render_to_response('chat/chat_list.html',
-                              {'chats': chats},
+                              {'chats': chats,
+                               'active_page': 'all'},
                               RequestContext(request))
 
 
@@ -43,7 +44,8 @@ def create_chat(request):
     else:
         form = ChatForm()
     return render_to_response('chat/create_chat.html',
-                              {'form': form},
+                              {'form': form,
+                               'active_page': 'create'},
                               RequestContext(request))
 
 

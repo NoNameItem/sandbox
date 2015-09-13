@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title-project %}
+  Chat
+{% endblock %}
+
+{% block project %} Chat {% endblock %}
+
+{% block project_navbar %}
+  <li class="divider-vertical"></li>
+  {% if user.is_authenticated and recent_chats %}
+    <li {% if active_page == 'all' %}class="active"{% endif %}>
+    <a href="{% url 'chat:main' %}">All</a>
+  </li>
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+         aria-expanded="false">Recent <span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        {% for chat in recent_chats %}
+          <li><a href="{% url 'chat:chat' chat.id %}">{{ chat.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+{% endblock %}
+
+{% block project_navbar_right %}
+  <li {% if active_page == 'create' %}class="active"{% endif %}>
+    <a href="{% url 'chat:new' %}">Start chat</a>
+  </li>
+  <li class="divider-vertical"></li>
+{% endblock %}
