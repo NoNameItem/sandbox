@@ -9,17 +9,17 @@
 {% block project_navbar %}
     <li class="divider-vertical"></li>
     <li {% if active_page == 'recent' %}class="active"{% endif %}>
-        <a href="/snippetalk/">Recent snippets</a>
+        <a href="{% url 'snippetalk:recent' %}">Recent snippets</a>
     </li>
     <li {% if active_page == 'my' %}class="active"{% endif %}>
-        <a href="/snippetalk/my/">My snippets</a>
+        <a href="{% url 'snippetalk:my' %}">My snippets</a>
     </li>
 
 {% endblock %}
 
 {% block project_navbar_right %}
     <li {% if active_page == 'create' %}class="active"{% endif %}>
-        <a href="/snippetalk/create/">Create snippet</a>
+        <a href="{% url 'snippetalk:create' %}">Create snippet</a>
     </li>
     <li class="divider-vertical"></li>
 {% endblock %}

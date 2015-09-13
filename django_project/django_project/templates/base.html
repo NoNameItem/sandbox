@@ -49,7 +49,7 @@
       <ul class="nav navbar-nav navbar-right">
         {% block project_navbar_right %}{% endblock %}
         {% if user.is_authenticated %}
-          <li><a href="/user/{{ user.username }}">Profile</a></li>
+          <li><a href="{% url 'profile' user.username %}">Profile</a></li>
           <li><a href="{% url 'auth_logout' %}?next=/">Log Out</a></li>
         {% else %}
           <li><a href="{% url 'auth_login' %}">Log In</a></li>

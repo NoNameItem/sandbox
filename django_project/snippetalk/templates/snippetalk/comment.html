@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
       {% if comm.author %}
-        <a href="/user/{{ comm.author.username }}/" class="thumbnail">
+        <a href="{% url 'profile' comm.author.username %}" class="thumbnail">
           <img src="{{ comm.author.userprofile.profile_image.url|default:"/media/images/default.jpg" }}"
                alt="image not found">
         </a>

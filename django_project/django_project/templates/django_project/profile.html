@@ -3,146 +3,147 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if self %}
-        your profile
-    {% else %}
-        {{ get_user.username }}'s profile
-    {% endif %}
+  {% if self %}
+    your profile
+  {% else %}
+    {{ get_user.username }}'s profile
+  {% endif %}
 {% endblock %}
 
 {% block headers %}
-    <link href="{% static "django_project/css/profile.css" %}" rel="stylesheet">
+  <link href="{% static "django_project/css/profile.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="modal fade" id="modal-new-chat">
-  	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-   				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-   				<h4 class="modal-title">Create new chat</h4>
-   			</div>
-   			<div class="modal-body">
-   				<form action="#" method="post" role="form" id="new-chat-form">
-                    {% csrf_token %}
-   					{{ private_chat_form|crispy }}
-   				</form>
-   			</div>
-   			<div class="modal-footer">
-   				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-   				<button type="button" class="btn btn-primary" id="new-chat-submit">Start new chat</button>
-   			</div>
-   		</div><!-- /.modal-content -->
-   	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div class="page-header">
-  <h1>{{ get_user.username }}<small>'s profile</small></h1>
-</div>
-<div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-        {% if user_profile.profile_image %}
-
-            	<a href="{{ user_profile.profile_image.url }}" class="thumbnail">
-            		<img src="{{ user_profile.profile_image.url }}" alt="">
-            	</a>
-        {% else %}
-            	<a href="/media/images/default.jpg" class="thumbnail">
-            		<img src="/media/images/default.jpg" alt="A generic square placeholder image with a white border around it, making it resemble a photograph taken with an old instant camera">
-            	</a>
-        {% endif %}
-
-        {% if self %}
-            <form action="/change_photo/{{ get_user.id }}/" method="post" class="form-select" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label for="id_image" class="hidden">Image:</label>
-                <input type="file" id="id_image" class="hidden" name="image">
-                <button class="btn btn-default btn-block" id="change_photo" type="submit">Change photo</button>
-            </form>
-        {% else %}
-            {% if user.is_authenticated %}
-                <div class="btn-group-vertical btn-block" role="group">
-                    <div class=" btn-group btn-block">
-                        <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
-                            Private chat <span class="caret"></span>
-                        </a>
-    		            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                            <li class="dropdown-submenu">
-                                <a tabindex="-1" href="#">Private chats</a>
-                                <ul class="dropdown-menu">
-                                    {% for private_chat in private_chats %}
-                                        <li><a href="/chat/{{ private_chat.id }}" target="_blank">
-                                            {{ private_chat.name }}
-                                        </a></li>
-                                    {% endfor %}
-                                    <li class="divider"></li>
-                                    <li><a href="/chat/merge_private/{{ get_user.id }}">Merge private chats</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a role="button" data-toggle="modal" data-target="#modal-new-chat">Start new private chat</a>
-
-                            </li>
-                        </ul>
-                    </div>
-                    <div class=" btn-group btn-block">
-                        <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
-                            Invite to chat <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Second level</a></li>
-                            <li><a href="#">Second level</a></li>
-                            <li><a href="#">Second level</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Second level</a></li>
-                        </ul>
-                    </div>
-                </div>
-             {% endif %}
-        {% endif %}
+  <div class="modal fade" id="modal-new-chat">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Create new chat</h4>
         </div>
+        <div class="modal-body">
+          <form action="#" method="post" role="form" id="new-chat-form">
+            {% csrf_token %}
+            {{ private_chat_form|crispy }}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="new-chat-submit">Start new chat</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <div class="page-header">
+    <h1>{{ get_user.username }}<small>'s profile</small></h1>
+  </div>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+      {% if user_profile.profile_image %}
+
+        <a href="{{ user_profile.profile_image.url }}" class="thumbnail">
+          <img src="{{ user_profile.profile_image.url }}" alt="">
+        </a>
+      {% else %}
+        <a href="/media/images/default.jpg" class="thumbnail">
+          <img src="/media/images/default.jpg" alt="A generic square placeholder image with a white border around it, making it resemble a photograph taken with an old instant camera">
+        </a>
+      {% endif %}
+
+      {% if self %}
+        <form action="{% url 'change_photo' get_user.id %}" method="post" class="form-select"
+              enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="id_image" class="hidden">Image:</label>
+          <input type="file" id="id_image" class="hidden" name="image">
+          <button class="btn btn-default btn-block" id="change_photo" type="submit">Change photo</button>
+        </form>
+      {% else %}
+        {% if user.is_authenticated %}
+          <div class="btn-group-vertical btn-block" role="group">
+            <div class=" btn-group btn-block">
+              <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+                Private chat <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-submenu">
+                  <a tabindex="-1" href="#">Private chats</a>
+                  <ul class="dropdown-menu">
+                    {% for private_chat in private_chats %}
+                      <li><a href="{% url 'chat:chat' private_chat.id %}" target="_blank">
+                        {{ private_chat.name }}
+                      </a></li>
+                    {% endfor %}
+                    <li class="divider"></li>
+                    <li><a href="{% url 'chat:merge_private' get_user.id %}">Merge private chats</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a role="button" data-toggle="modal" data-target="#modal-new-chat">Start new private chat</a>
+
+                </li>
+              </ul>
+            </div>
+            <div class=" btn-group btn-block">
+              <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+                Invite to chat <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Second level</a></li>
+                <li><a href="#">Second level</a></li>
+                <li><a href="#">Second level</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Second level</a></li>
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
 
     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-        <div class="panel panel-default">
-        	  <div class="panel-heading">
-        			<h3 class="panel-title">Info</h3>
-        	  </div>
-        	  <div class="panel-body">
-        			<ul>
-                        <li><p><strong>First name:</strong>
-                            {% if get_user.first_name %}
-                                {{ get_user.first_name }}
-                            {% else %}
-                                Undefined
-                            {% endif %}
-                        </p></li>
-                        <li><p><strong>Last name:</strong>
-                            {% if get_user.last_name %}
-                                {{ get_user.last_name }}
-                            {% else %}
-                                Undefined
-                            {% endif %}
-                        </p></li>
-                        <li><p><strong>Sex:</strong> {{ user_profile.get_sex_display }}</p></li>
-                        <li><p><strong>About:</strong> {{ user_profile.about }}</p></li>
-                    </ul>
-              {% if self %}
-                    <a class="btn btn-default" href="/change_profile/{{ get_user.id }}" role="button">Change profile</a>
-              {% endif %}
-        	  </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Info</h3>
         </div>
+        <div class="panel-body">
+          <ul>
+            <li><p><strong>First name:</strong>
+              {% if get_user.first_name %}
+                {{ get_user.first_name }}
+              {% else %}
+                Undefined
+              {% endif %}
+            </p></li>
+            <li><p><strong>Last name:</strong>
+              {% if get_user.last_name %}
+                {{ get_user.last_name }}
+              {% else %}
+                Undefined
+              {% endif %}
+            </p></li>
+            <li><p><strong>Sex:</strong> {{ user_profile.get_sex_display }}</p></li>
+            <li><p><strong>About:</strong> {{ user_profile.about }}</p></li>
+          </ul>
+          {% if self %}
+            <a class="btn btn-default" href="/change_profile/{{ get_user.id }}" role="button">Change profile</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static "django_project/js/profile.js" %}"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            userId = {{ get_user.id }};
-            {% if open_new_chat_form %}
-            $('#modal-new-chat').modal('show');
-            {% endif %}
-        });
-    </script>
+  <script src="{% static "django_project/js/profile.js" %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      userId = {{ get_user.id }};
+      {% if open_new_chat_form %}
+        $('#modal-new-chat').modal('show');
+      {% endif %}
+    });
+  </script>
 {% endblock %}

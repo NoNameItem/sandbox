@@ -50,7 +50,7 @@ def highlight(code, lang):
 
 
 def get_filename(name, lang):
-    return LANG_TO_EXT[lang][0].replace('*', name)
+    return LANG_TO_EXT[lang][0].replace('*', '[snippetalk]' + name)
 
 
 def parse_filename(filename):
