@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.fields.related import OneToOneField
 
+from django_project.fields import ThumbnailImageField
+
 
 class UserProfile(models.Model):
     user = OneToOneField(User)
@@ -15,7 +17,7 @@ class UserProfile(models.Model):
     )
 
     sex = models.IntegerField(choices=SEX_CHOICES, default=2)
-    profile_image = models.ImageField(upload_to='images/', null=True)
+    profile_image = ThumbnailImageField(upload_to='images/', null=True)
     about = models.TextField(blank=True)
 
     def set_profile_image(self, f):
@@ -26,7 +28,7 @@ class UserProfile(models.Model):
 
     @property
     def image_url(self):
-        return self.profile_image.url if self.profile_image else "/media/images/default.jpg"
+        return self.profile_image.thumb_url if self.profile_image else "/media/images/default.jpg"
 
     def __str__(self):
         return self.user.username
