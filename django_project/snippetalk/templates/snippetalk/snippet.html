@@ -19,6 +19,40 @@
 {% block content %}
   {% csrf_token %}
 
+
+  <div class="modal fade" id="existing-modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Select snippet</h4>
+        </div>
+        <div class="modal-body">
+          <select name="snippet-select" id="snippet-select">
+            {% for snippet in my_snippets %}
+              <option value="{{ snippet.id }}">{{ snippet.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="panel panel-default panel-code">
+            <div class="panel-body">
+              <div class="highlight" id="my-snippet">
+                <ol>
+                  {{ my_snippets.0.highlighted | safe }}
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" id="add-snippet" data-dismiss="modal">Add to comment</button>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
   <div class="page-header">
     <h1>
       <a href="#" id="name" data-type="text" data-pk="{{ snippet.id }}"
@@ -59,10 +93,10 @@
         <ul class="nav navbar-nav nav-pils navbar-right">
           {% if not snippet %}
             <form enctype="multipart/form-data" method="post" name="fileform">
-            {% csrf_token %}
-            <input type="file" id="file" name="file" class="hidden">
+              {% csrf_token %}
+              <input type="file" id="file" name="file" class="hidden">
             </form>
-             <li role="presentation">
+            <li role="presentation">
               <a class="btn" data-toggle="tooltip" data-placement="bottom" title="Upload" id="upload">
                 <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
               </a>

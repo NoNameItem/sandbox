@@ -1,3 +1,4 @@
+import json
 import os
 import re
 
@@ -64,6 +65,10 @@ def create(request):
 
 def show(request, snippet_id=None, fork=False):
     active_page = None
+    my_snippets = None
+    if request.user.is_authenticated():
+        my_snippets = request.user.snippet_set.filter(public=1).order_by('name')
+
     try:
         snippet = Snippet.objects.get(id=snippet_id)
         mine = snippet.author == request.user
@@ -93,7 +98,8 @@ def show(request, snippet_id=None, fork=False):
                                   'langs':       LANG_JS,
                                   'plain_text':  PLAIN_TEXT,
                                   'title':       title,
-                                  'active_page': active_page
+                                  'active_page': active_page,
+                                  'my_snippets': my_snippets
                               },
                               RequestContext(request))
 
@@ -142,6 +148,7 @@ def delete(request, snippet_id):
 def comment(request):
     if request.method == 'POST':
         try:
+            print(json.loads(request.POST['snippets']))
             snippet = Snippet.objects.get(id=int(request.POST['id']))
             parent = Comment.objects.get(id=int(request.POST['parent'])) if request.POST['parent'] else None
             comm = Comment()
@@ -149,6 +156,11 @@ def comment(request):
             comm.author = request.user if request.user.is_authenticated() else None
             comm.to_snippet = snippet
             comm.parent = parent
+            comm.save()
+            for s_id in json.loads(request.POST['snippets']):
+                m_snippet = Snippet.objects.get(id=int(s_id))
+                comm.snippets.add(m_snippet)
+                m_snippet.save()
             comm.save()
             return JsonResponse(status=200,
                                 data={
@@ -195,3 +207,16 @@ def upload(request):
             return JsonResponse(status=400, data={'message': "Bad data"})
     else:
         return JsonResponse(status=400, data={'message': "Use POST"})
+
+
+def preview(request):
+    if request.method == 'GET':
+        try:
+            if not request.GET['id']:
+                return JsonResponse(status=400, data={'message': "Missing parameter"})
+            snippet = Snippet.objects.get(id=request.GET['id'])
+            return JsonResponse(status=200, data={'code': snippet.highlighted})
+        except Snippet.DoesNotExist:
+            return JsonResponse(status=404, data={'message': "Snippet not found"})
+    else:
+        return JsonResponse(status=400, data={'message': "Use GET"})

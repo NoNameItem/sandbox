@@ -14,4 +14,5 @@ urlpatterns = patterns('',
                        url(r'^comment/$', 'snippetalk.views.comment', name='comment'),
                        url(r'^download/(?P<snippet_id>\d+)/$', 'snippetalk.views.download', name='download'),
                        url(r'^upload/$', 'snippetalk.views.upload', name='upload'),
+                       url(r'^preview/$', 'snippetalk.views.preview', name='preview'),
                        )

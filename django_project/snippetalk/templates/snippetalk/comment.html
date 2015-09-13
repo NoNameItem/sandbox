@@ -1,4 +1,4 @@
-<div class="list-group-item" data-id="{{ comm.id }}">
+<div class="list-group-item" data-id="{{ comm.id }}" xmlns="http://www.w3.org/1999/html">
   <div class="row">
     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
       {% if comm.author %}
@@ -32,6 +32,17 @@
       <p>
         {{ comm.text|safe }}
       </p>
+      {% if comm.snippets.all %}
+        <small><i>Linked snippets:
+        {% for snippet in comm.snippets.all %}
+          {% if not forloop.last %}
+             <a href="#">&gt;&gt;{{ snippet.name }},</a>
+          {% else %}
+             <a href="#">&gt;&gt;{{ snippet.name }}</a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </i></small>
     </div>
   </div>
 </div>

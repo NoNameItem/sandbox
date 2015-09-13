@@ -11,14 +11,16 @@ $.ajaxSetup({
   }
 });
 
+// <li><snippet.name> <a data-id="<snippet.id>"><span class="glyphicon glyphicon-remove"></span></a>
 var commentForm =
   $('<div class="row" style="padding-left: 40px">' +
     '<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 comment-form">' +
     '<textarea id="comment" class="form-control" rows="3" placeholder="Enter comment"></textarea>' +
     '<div class="row tools">' +
-    '<ul class="nav nav-pills">' +
-    '</ul>' +
-    '<div class="btn-group" role="group" id="comment-buttons">' +
+    'Snippets: <ul id="snippets"><ul>' +
+    '</div>' +
+    '<div class="row tools">' +
+    '<div class="btn-group" role="group" id="comment-buttons" style="float: right">' +
     '<button class="btn btn-danger" id="cancel-comment" onclick="closeCommentForm()">' +
     '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;&nbsp;Cancel' +
     '</button>' +
@@ -26,9 +28,18 @@ var commentForm =
     'Add Comment&nbsp;&nbsp;<span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>' +
     '</button>' +
     '</div>' +
+    '<ul class="nav nav-pills">' +
+    '<li role="presentation">' +
+    '<a data-toggle="modal" href="#existing-modal" role="button" aria-haspopup="true" aria-expanded="false">'+
+    '<span class="glyphicon glyphicon-paperclip"></span>' +
+    '</a>' +
+    '</li>' +
+    '</ul>' +
     '</div>' +
     '</div>'+
     '</div>');
+
+var commentSnippets = [];
 
 var opts = {
   lines: 13 // The number of lines to draw
@@ -149,7 +160,8 @@ function postComment(){
     var data = {
       id: $('#snippet-id').val(),
       parent: parent_comment,
-      comment: comment
+      comment: comment,
+      snippets: JSON.stringify(commentSnippets)
     };
     var opt = {
       url: '/snippetalk/comment/',
@@ -188,6 +200,21 @@ function sendFile() {
   }
 }
 
+function replacePreview(data, status, xhr){
+  $('#my-snippet ol').html(data.code);
+}
+
+function get_snippet_preview() {
+  var opt = {
+    url: '/snippetalk/preview/',
+    type: 'get',
+    data: {
+      id: $('#snippet-select').val()
+    },
+    success: replacePreview
+  };
+  $.ajax(opt);
+}
 $('document').ready(function(){
   var highlight = $('#highlight');
 
@@ -222,6 +249,10 @@ $('document').ready(function(){
       $('#raw-ta-hidden').val($('#raw-ta').val());
       updateCode($('#raw-ta').val(), lang.editable('getValue', true));
     }
+  });
+
+  $('#snippet-select').select2({
+    width: '200px'
   });
 
   $('#save').click(saveSnippet);
@@ -266,4 +297,23 @@ $('document').ready(function(){
   });
 
   $('#file').change(sendFile);
+
+  $('#snippet-select').on('change', get_snippet_preview);
+
+  $('#add-snippet').click(function(e){
+    var id = $('#snippet-select').val();
+    var name = $('#snippet-select option[value="' + id + '"]').text();
+    if($.inArray(id, commentSnippets) == -1) {
+      commentSnippets.push(id);
+      var rem = $('<a name="remove-snippet" href="#" data-id="' + id + '">&times;</a>');
+      var list_item = $('<li>' + name + ' </li>');
+      list_item.append(rem);
+      list_item.appendTo($('#snippets'));
+      rem.click(function (e) {
+        e.preventDefault();
+        list_item.remove();
+        commentSnippets.splice(commentSnippets.indexOf(id), 1);
+      });
+    }
+  });
 });
