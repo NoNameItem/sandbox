@@ -6,7 +6,9 @@
   <meta charset="UTF-8">
   <title>{% block title-project %}Sandbox{% endblock %}: {% block title %}{% endblock %}</title>
   <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
-  <link href="{% static "bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet" type="text/css">
+{#  <link href="{% static "bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet" type="text/css">#}
+  <link href="{% static "x_paper_kit_1.0/assets/css/ct-paper.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "x_paper_kit_1.0/assets/css/examples.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "bootstrap-notify/css/bootstrap-notify.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "bootstrap-notify/css/styles/alert-blackgloss.css" %}" rel="stylesheet"
         type="text/css">
@@ -60,6 +62,7 @@
     <!-- /.navbar-collapse -->
 {#  </div>#}
 </nav>
+
 <div class="container">
   <div class='notifications top-right' id="tr-notify" style="margin-top: 30px"></div>
   <div class='notifications top-left' id="tl-notify" style="margin-top: 30px"></div>
@@ -68,10 +71,13 @@
   {% block content %}{% endblock %}
 </div>
 
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
+
 <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+<script src="{% static "x_paper_kit_1.0/assets/js/ct-paper.js" %}"></script>
 <script src="{% static "bootstrap-notify/js/bootstrap-notify.js" %}"></script>
 <script src="{% static "sandbox/alerts/js/alerts.js" %}"></script>
 {% block scripts %}{% endblock %}

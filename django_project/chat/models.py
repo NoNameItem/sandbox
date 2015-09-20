@@ -22,6 +22,13 @@ class Chat(models.Model):
     def get_choice(self):
         return self.id, "{0} ({1})".format(self.name, self.topic)
 
+    @property
+    def last_message(self):
+        if self.message_set.count() > 0:
+            return self.message_set.order_by('-datetime')[0].text
+        else:
+            return ''
+
 
 class Message(models.Model):
     text = models.TextField()

@@ -14,14 +14,14 @@
 
 {% block content %}
   <div class="page-header">
-    <h1>
+    <h2>
       {{ chat.name }}
       <small>
         <a href="#" id="topic" data-type="text" data-pk="{{ chat.id }}" data-title="Change topic" data-url="/chat/change_topic/">
           {{ chat.topic|default:"set topic" }}
         </a>
       </small>
-    </h1>
+    </h2>
   </div>
   <div class="row">
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 main-col">

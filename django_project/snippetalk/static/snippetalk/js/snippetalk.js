@@ -21,7 +21,7 @@ var commentForm =
     '</div>' +
     '<div class="row tools">' +
     '<div class="btn-group" role="group" id="comment-buttons" style="float: right">' +
-    '<button class="btn btn-danger" id="cancel-comment" onclick="closeCommentForm()">' +
+    '<button class="btn btn-danger" id="cancel-comment" onclick="closeCommentForm()" >' +
     '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;&nbsp;Cancel' +
     '</button>' +
     '<button class="btn btn-success" id="add-comment" onclick="postComment()">' +
@@ -30,9 +30,9 @@ var commentForm =
     '</div>' +
     '<ul class="nav nav-pills">' +
     '<li role="presentation">' +
-    '<a data-toggle="modal" href="#existing-modal" role="button" aria-haspopup="true" aria-expanded="false">'+
+    '<button class="btn btn-default round" data-toggle="modal" href="#existing-modal" role="button" aria-haspopup="true" aria-expanded="false">'+
     '<span class="glyphicon glyphicon-paperclip"></span>' +
-    '</a>' +
+    '</button>' +
     '</li>' +
     '</ul>' +
     '</div>' +
@@ -265,18 +265,20 @@ $('document').ready(function(){
   });
 
   $('.expand').click(function(e){
-    if($(e.target).parent().attr('data-original-title') == 'Collapse')
-      $(e.target).parent().attr('data-original-title', 'Expand');
+    console.log($(this));
+    if($(this).attr('data-original-title') == 'Collapse')
+      $(this).attr('data-original-title', 'Expand');
     else
-      $(e.target).parent().attr('data-original-title', 'Collapse');
-    $(e.target).toggleClass('glyphicon-chevron-down');
-    $(e.target).toggleClass('glyphicon-chevron-right');
+      $(this).attr('data-original-title', 'Collapse');
+    $($(this).attr('data-target')).collapse('toggle');
+    $(this).children().toggleClass('glyphicon-chevron-down');
+    $(this).children().toggleClass('glyphicon-chevron-right');
   });
 
   $('.answer').click(function(e){
-    parent_comment = $(e.target).attr('data-id');
+    parent_comment = $(this).attr('data-id');
 
-    var prev = $(e.target).closest('.list-group-item').next('.list-group')[0];
+    var prev = $(this).closest('.list-group-item').next('.list-group')[0];
     //console.log(prev);
     commentForm.insertAfter(prev);
     $('html, body').animate({
@@ -315,5 +317,9 @@ $('document').ready(function(){
         commentSnippets.splice(commentSnippets.indexOf(id), 1);
       });
     }
+  });
+
+  $('[data-toggle="tooltip"]').mouseleave(function(e){
+    $(this).tooltip('hide');
   });
 });

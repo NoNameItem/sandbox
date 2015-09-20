@@ -6,20 +6,37 @@
 
 {% block content %}
     <div class="page-header">
-      <h1>Chat list<small><br>Select chat or create a new one</small></h1>
+      <h2>Chat list<small><br>Select chat or create a new one</small></h2>
     </div>
-    <div class="jumbotron">
-    	<div class="container">
-    		<ul>
-            {% for chat in chats %}
-                 <li><p><a href="{% url 'chat:chat' chat.id %}"><strong>{{ chat.name }}</strong>({{ chat.topic }})</a></p></li>
-            {% empty %}
-                <p>There is no chat for you</p>
-    		{% endfor %}
-    		</ul>
-    		<p>
-    			<a class="btn btn-default btn-block" href="/chat/new/">Create new chat</a>
-    		</p>
+{#    <div class="jumbotron">#}
+    	<div class="list-group">
+      {% for chat in chats %}
+        <a href="{% url 'chat:chat' chat.id %}" class="list-group-item">
+            <h5 class="list-group-item-heading">
+                {{ chat.name }}
+              <small>{{ chat.topic }}</small>
+            </h5>
+            <p class="list-group-item-text"><i>
+              {% if chat.last_message %}
+              [{{ chat.last_message_time }}]{{ chat.last_message_sender }}: {{ chat.last_message }}
+              {% else %}
+                No messages yet
+              {% endif %}
+
+            </i></p>
+        </a>
+    {% empty %}
+        <a href="{% url 'snippetalk:create' %}" class="list-group-item">
+            <h4 class="list-group-item-heading">
+                There is no chats now.
+            </h4>
+            <p class="list-group-item-text">You can create first one.</p>
+        </a>
+    {% endfor %}
+
+
+
     	</div>
-    </div>
+  <a class="btn btn-default btn-block" href="/chat/new/">Create new chat</a>
+{#    </div>#}
 {% endblock %}

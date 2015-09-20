@@ -12,15 +12,13 @@
         </a>
       {% endif %}
       <div class="row comm">
-      {% if comm.answers.all %}
-        <span class="round" data-toggle="tooltip" data-placement="bottom" title="Collapse">
-            <span class="glyphicon glyphicon-chevron-down btn btn-sm btn-default round expand" data-toggle="collapse"
-                  data-target="#answers-{{ comm.id }}"></span>
-          </span>
-      {% endif %}
-      <span class="round" data-toggle="tooltip" data-placement="bottom" title="Answer">
-          <span class="glyphicon glyphicon-share-alt btn btn-success round answer" data-id="{{ comm.id }}"></span>
-      </span>
+        <button class="btn btn-xs btn-default btn-comm expand" data-toggle="tooltip" data-placement="bottom"
+                title="Collapse" data-target="#answers-{{ comm.id }}">
+            <span class="glyphicon glyphicon-chevron-down" ></span>
+          </button>
+      <button class="btn btn-xs btn-success btn-comm answer" data-toggle="tooltip" data-placement="bottom" title="Answer">
+          <span class="glyphicon glyphicon-share-alt" data-id="{{ comm.id }}"></span>
+      </button>
       </div>
     </div>
     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">

@@ -37,31 +37,36 @@
   </div><!-- /.modal -->
 
   <div class="modal fade" id="image-modal">
-  	<div class="modal-dialog">
+  	<div class="modal-dialog modal-lg">
   		<div class="modal-content">
   			<div align="center" class="modal-body">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <img  src="{{ user_profile.profile_image.url }}" alt="">
+          {% if user_profile.profile_image %}
+            <img  src="{{ user_profile.profile_image.url }}" alt="">
+          {% else %}
+            <img  src="/media/images/default.jpg" alt="">
+          {% endif %}
+
   			</div>
   		</div><!-- /.modal-content -->
   	</div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
   <div class="page-header">
-    <h1>{{ get_user.username }}<small>'s profile</small></h1>
+    <h2>{{ get_user.username }}<small>'s profile</small></h2>
   </div>
   <div class="row">
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    <a data-toggle="modal" href="#image-modal" class="thumbnail">
       {% if user_profile.profile_image %}
 
-        <a data-toggle="modal" href="#image-modal" class="thumbnail">
+
           <img src="{{ user_profile.profile_image.thumb_url }}" alt="">
-        </a>
+
       {% else %}
-        <a href="/media/images/default.jpg" class="thumbnail">
           <img src="/media/images/default.jpg" alt="A generic square placeholder image with a white border around it, making it resemble a photograph taken with an old instant camera">
-        </a>
       {% endif %}
+        </a>
 
       {% if self %}
         <form action="{% url 'change_photo' get_user.id %}" method="post" class="form-select"
