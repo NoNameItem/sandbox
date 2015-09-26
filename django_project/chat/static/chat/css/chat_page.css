@@ -41,6 +41,7 @@ html, body{
 
 .load-more{
     background-color: silver;
-    height: 15%;
     opacity: 0.5;
+    border-radius: 0;
+    border: 0;
 }

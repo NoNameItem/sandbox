@@ -102,12 +102,16 @@
   <script src="{% static "ladda-bootstrap/js/spin.min.js" %}"></script>
   <script src="{% static "ladda-bootstrap/js/ladda.min.js" %}"></script>
   <script src="{% static "chat/js/chat_page.js" %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-visibility/1.0.11/jquery-visibility.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
+
       {% if oldest_datetime %}
         oldest = "{{ oldest_datetime }}";
       {% endif %}
+      newest = '{{ newest_datetime }}';
       startChat({{ chat.id }}, '{{ user.username }}');
-    })
+    });
+  scrollDown();
   </script>
 {% endblock %}

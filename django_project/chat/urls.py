@@ -11,5 +11,6 @@ urlpatterns = patterns('',
                        url(r'^leave/(?P<chat_id>\d+)/$', 'chat.views.leave', name='leave'),
                        url(r'^change_topic/', 'chat.views.change_topic', name='change_topic'),
                        url(r'^get_previous/(?P<chat_id>\d+)/$', 'chat.views.get_previous', name='previous'),
+                       url(r'^get_updates/(?P<chat_id>\d+)/$', 'chat.views.get_updates', name='updates'),
                        url(r'^merge_private/(?P<user_id>\d+)/$', 'chat.views.merge_private', name='merge_private'),
                        )

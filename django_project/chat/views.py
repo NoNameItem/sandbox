@@ -70,7 +70,8 @@ def show_chat(request, chat_id):
                                'message_blocks': message_blocks,
                                'potential_participants': potential_participants.order_by('username'),
                                'not_all': not_all,
-                               'oldest_datetime': oldest_datetime.timestamp()},
+                               'oldest_datetime': oldest_datetime.timestamp(),
+                               'newest_datetime': datetime.datetime.now().timestamp()},
                               RequestContext(request))
 
 
@@ -253,3 +254,20 @@ def merge_private(request, user_id):
                               {'form': form,
                                'other': other.username},
                               RequestContext(request))
+
+
+@login_required
+def get_updates(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+    if request.user not in chat.participants.all():
+        raise PermissionDenied
+    if request.method == 'GET':
+        newest_datetime = datetime.datetime.fromtimestamp(float(request.GET['newest']))
+        first_message = chat.message_set.order_by('datetime')[0]
+        messages = chat.message_set.filter(datetime__gt=newest_datetime).order_by('-datetime')
+
+        not_all, oldest_datetime, message_blocks = make_message_blocks(first_message, messages)
+        return JsonResponse(status=200, data={'newest_datetime': datetime.datetime.now().timestamp(),
+                                              'message_blocks': message_blocks})
+    else:
+        return JsonResponse(status=400, data={'message': "Please use GET"})
