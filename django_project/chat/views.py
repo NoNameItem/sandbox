@@ -271,3 +271,23 @@ def get_updates(request, chat_id):
                                               'message_blocks': message_blocks})
     else:
         return JsonResponse(status=400, data={'message': "Please use GET"})
+
+
+def add_user(request, chat_id):
+    if request.method == 'POST':
+        try:
+            chat = Chat.objects.get(id=int(chat_id))
+            if request.user not in chat.participants.all():
+                raise PermissionDenied
+            user_id = request.POST['user_id']
+            user = User.objects.get(id=int(user_id))
+            chat.participants.add(user)
+            data = get_user_lists(chat)
+            post_to_queue(chat_id, json.dumps(data))
+        except Chat.DoesNotExist:
+            return JsonResponse(status=404, data={'message': "Chat not found"})
+        except User.DoesNotExist:
+            return JsonResponse(status=404, data={'message': "User not found"})
+        return JsonResponse(status=200, data={'message': "OK"})
+    else:
+        return JsonResponse(status=400, data={'message': "Please use POST"})

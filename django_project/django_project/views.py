@@ -10,7 +10,7 @@ from django_project.models import UserProfile
 from django_project.forms import ImageUploadForm, UserForm, UserProfileForm
 from chat.models import Chat
 from chat.forms import PrivateChatForm
-from chat.utils import get_private_chats
+from chat.utils import get_private_chats, get_chats_without_user
 
 
 class MyRegistrationView(RegistrationView):
@@ -31,6 +31,7 @@ def home(request):
 
 def profile(request, username):
     private_chats = None
+    chats_without_user = None
     private_chat_form = None
     open_new_chat_form = False
     context = RequestContext(request)
@@ -40,6 +41,8 @@ def profile(request, username):
     user_profile = UserProfile.objects.filter(user=user)[0]
 
     if request.user != user:
+        chats_without_user = get_chats_without_user(request.user, user)
+
         private_chats = get_private_chats(request.user, user)
         if request.method != 'POST':
             new_private_chat = Chat()
@@ -62,7 +65,8 @@ def profile(request, username):
                                "user_profile": user_profile,
                                "private_chats": private_chats,
                                "private_chat_form": private_chat_form,
-                               "open_new_chat_form": open_new_chat_form},
+                               "open_new_chat_form": open_new_chat_form,
+                               "chats_without_user": chats_without_user},
                               context)
 
 

@@ -80,7 +80,7 @@
         {% if user.is_authenticated %}
           <div class="btn-group-vertical btn-block" role="group">
             <div class=" btn-group btn-block">
-              <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+              <a id="private-chat" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
                 Private chat <span class="caret"></span>
               </a>
               <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
@@ -103,16 +103,13 @@
               </ul>
             </div>
             <div class=" btn-group btn-block">
-              <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
-                Invite to chat <span class="caret"></span>
+              <a id="invite-button" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
+                Add to chat <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="#">Second level</a></li>
-                <li><a href="#">Second level</a></li>
-                <li><a href="#">Second level</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Second level</a></li>
-              </ul>
+                {% for chat in chats_without_user %}
+                  <li><a role="button" data-id="{{ chat.id }}" class="add-to-chat">{{ chat.name }}</a></li>
+                {% endfor %}
             </div>
           </div>
         {% endif %}
