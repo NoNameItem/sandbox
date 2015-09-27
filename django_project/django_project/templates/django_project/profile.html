@@ -83,23 +83,20 @@
               <a id="private-chat" role="button" data-toggle="dropdown" class="btn btn-default btn-block dropdown-toggle" href="#">
                 Private chat <span class="caret"></span>
               </a>
-              <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                <li class="dropdown-submenu">
-                  <a tabindex="-1" href="#">Private chats</a>
-                  <ul class="dropdown-menu">
-                    {% for private_chat in private_chats %}
-                      <li><a href="{% url 'chat:chat' private_chat.id %}" target="_blank">
-                        {{ private_chat.name }}
-                      </a></li>
-                    {% endfor %}
-                    <li class="divider"></li>
-                    <li><a href="{% url 'chat:merge_private' get_user.id %}">Merge private chats</a></li>
-                  </ul>
-                </li>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                 <li>
                   <a role="button" data-toggle="modal" data-target="#modal-new-chat">Start new private chat</a>
-
                 </li>
+                <li class="divider"></li>
+                {% for private_chat in private_chats %}
+                  <li><a href="{% url 'chat:chat' private_chat.id %}" target="_blank">
+                    {{ private_chat.name }}
+                  </a></li>
+                  {% if forloop.last %}
+                    <li class="divider"></li>
+                    <li><a href="{% url 'chat:merge_private' get_user.id %}">Merge private chats</a></li>
+                  {% endif %}
+                {% endfor %}
               </ul>
             </div>
             <div class=" btn-group btn-block">
