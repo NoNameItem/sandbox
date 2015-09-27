@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
 import pika
 
 from chat.models import Chat, Message, update_last_message
@@ -40,6 +41,18 @@ def create_chat(request):
             chat = form.save()
             if request.user not in chat.participants.all():
                 chat.participants.add(request.user)
+            mess = {
+                'id': chat.id,
+                'name': chat.name,
+                'text': chat.topic,
+                'sender': request.user.username,
+                'link': reverse('chat:chat', kwargs={'chat_id': chat.id})
+            }
+            for user in chat.get_user_list():
+                post_to_notify_queue(str(user.id), json.dumps({
+                    'type': "C",
+                    'mess': mess
+                }))
             return HttpResponseRedirect('/chat/{0}'.format(chat.id))
     else:
         form = ChatForm()
@@ -114,7 +127,19 @@ def post(request, chat_id):
         message.save()
         update_last_message(message)
 
-        post_to_queue(chat_id, message.get_json_string())
+        post_to_chat_queue(chat_id, message.get_json_string())
+        mess = {
+            'id': chat.id,
+            'name': chat.name,
+            'text': message.text,
+            'sender': request.user.username,
+            'link': reverse('chat:chat', kwargs={'chat_id': chat.id})
+        }
+        for user in chat.participants.all():
+            post_to_notify_queue(str(user.id), json.dumps({
+                'type': 'M',
+                'mess': mess
+            }))
 
         return JsonResponse(status=200, data={'result': True})
 
@@ -122,13 +147,24 @@ def post(request, chat_id):
         return JsonResponse(status=400, data={'result': False})
 
 
-def post_to_queue(chat_id, message):
+# TODO: Refactor to one function
+def post_to_chat_queue(chat_id, message):
     conn = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1'))
     channel = conn.channel()
     channel.exchange_declare(exchange='chat',
                              type='direct')
     channel.basic_publish(exchange='chat',
                           routing_key=chat_id,
+                          body=message.encode('utf8'))
+
+
+def post_to_notify_queue(user_id, message):
+    conn = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1'))
+    channel = conn.channel()
+    channel.exchange_declare(exchange='notify',
+                             type='direct')
+    channel.basic_publish(exchange='notify',
+                          routing_key=user_id,
                           body=message.encode('utf8'))
 
 
@@ -143,8 +179,19 @@ def add_users(request, chat_id):
         for user_id in ids:
             user = get_object_or_404(User, id=user_id)
             chat.participants.add(user)
+            mess = {
+                'id': chat.id,
+                'name': chat.name,
+                'text': None,
+                'sender': request.user.username,
+                'link': reverse('chat:chat', kwargs={'chat_id': chat.id})
+            }
+            post_to_notify_queue(str(user.id), json.dumps({
+                'type': 'I',
+                'mess': mess
+            }))
         data = get_user_lists(chat)
-        post_to_queue(chat_id, json.dumps(data))
+        post_to_chat_queue(chat_id, json.dumps(data))
 
         return JsonResponse(status=200, data={'message': "OK"})
     else:
@@ -177,7 +224,7 @@ def leave(request, chat_id):
     chat.participants.remove(request.user)
     if len(chat.participants.all()) > 0:
         data = get_user_lists(chat)
-        post_to_queue(chat_id, json.dumps(data))
+        post_to_chat_queue(chat_id, json.dumps(data))
     else:
         chat.delete()
     return HttpResponseRedirect('/chat/')
@@ -196,7 +243,19 @@ def change_topic(request):
         chat.save()
         data = {'type': 'T',
                 'topic': chat.topic}
-        post_to_queue(str(chat.id), json.dumps(data))
+        post_to_chat_queue(str(chat.id), json.dumps(data))
+        mess = {
+            'id': chat.id,
+            'name': chat.name,
+            'text': chat.topic,
+            'sender': request.user.username,
+            'link': reverse('chat:chat', kwargs={'chat_id': chat.id})
+        }
+        for user in chat.get_user_list():
+            post_to_notify_queue(str(user.id), json.dumps({
+                'type': "T",
+                'mess': mess
+            }))
         return HttpResponse(status=200)
     else:
         return HttpResponse("Bad request", status=400)
@@ -283,7 +342,18 @@ def add_user(request, chat_id):
             user = User.objects.get(id=int(user_id))
             chat.participants.add(user)
             data = get_user_lists(chat)
-            post_to_queue(chat_id, json.dumps(data))
+            post_to_chat_queue(chat_id, json.dumps(data))
+            mess = {
+                'id': chat.id,
+                'name': chat.name,
+                'text': None,
+                'sender': request.user.username,
+                'link': reverse('chat:chat', kwargs={'chat_id': chat.id})
+            }
+            post_to_notify_queue(str(user.id), json.dumps({
+                'type': 'I',
+                'mess': mess
+            }))
         except Chat.DoesNotExist:
             return JsonResponse(status=404, data={'message': "Chat not found"})
         except User.DoesNotExist:

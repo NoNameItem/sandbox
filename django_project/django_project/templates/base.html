@@ -9,11 +9,12 @@
 {#  <link href="{% static "bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet" type="text/css">#}
   <link href="{% static "x_paper_kit_1.0/assets/css/ct-paper.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "x_paper_kit_1.0/assets/css/examples.css" %}" rel="stylesheet" type="text/css">
-  <link href="{% static "bootstrap-notify/css/bootstrap-notify.css" %}" rel="stylesheet" type="text/css">
-  <link href="{% static "bootstrap-notify/css/styles/alert-blackgloss.css" %}" rel="stylesheet"
-        type="text/css">
+{#  <link href="{% static "bootstrap-notify/css/bootstrap-notify.css" %}" rel="stylesheet" type="text/css">#}
+{#  <link href="{% static "bootstrap-notify/css/styles/alert-blackgloss.css" %}" rel="stylesheet"#}
+{#        type="text/css">#}
   <link href="{% static "sandbox/alerts/css/alert-styles.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "sandbox/css/theme.css" %}" rel="stylesheet" type="text/css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css" rel="stylesheet">
   {% block headers %}{% endblock %}
 </head>
 <body>
@@ -78,8 +79,15 @@
 
 <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
 <script src="{% static "x_paper_kit_1.0/assets/js/ct-paper.js" %}"></script>
-<script src="{% static "bootstrap-notify/js/bootstrap-notify.js" %}"></script>
+<script src="{% static "bootstrap-notify/bootstrap-notify.min.js" %}"></script>
 <script src="{% static "sandbox/alerts/js/alerts.js" %}"></script>
+<script src="{% static "sandbox/js/notify.js" %}"></script>
+{% if user.is_authenticated %}
+  <script>
+    username = '{{ user.username }}';
+    userId = {{ user.id }};
+  </script>
+{% endif %}
 {% block scripts %}{% endblock %}
 </body>
 </html>

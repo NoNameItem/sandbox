@@ -111,6 +111,7 @@
       {% endif %}
       newest = '{{ newest_datetime }}';
       startChat({{ chat.id }}, '{{ user.username }}');
+      currChatId = {{ chat.id }};
     });
   scrollDown();
   </script>
