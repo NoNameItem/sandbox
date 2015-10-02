@@ -3,6 +3,7 @@ import os
 import re
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 
@@ -142,7 +143,7 @@ def save(request):
 def delete(request, snippet_id):
     snippet = get_object_or_404(Snippet, id=snippet_id)
     snippet.delete()
-    return HttpResponseRedirect('/snippetalk/')
+    return HttpResponseRedirect(reverse('snippetalk:recent'))
 
 
 def comment(request):

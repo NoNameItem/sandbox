@@ -53,7 +53,7 @@ def create_chat(request):
                     'type': "C",
                     'mess': mess
                 }))
-            return HttpResponseRedirect('/chat/{0}'.format(chat.id))
+            return HttpResponseRedirect(reverse('chat:chat', kwargs={'chat_id': chat.id}))
     else:
         form = ChatForm()
     return render_to_response('chat/create_chat.html',
@@ -227,7 +227,7 @@ def leave(request, chat_id):
         post_to_chat_queue(chat_id, json.dumps(data))
     else:
         chat.delete()
-    return HttpResponseRedirect('/chat/')
+    return HttpResponseRedirect(reverse('chat:main'))
 
 
 @login_required
@@ -306,7 +306,7 @@ def merge_private(request, user_id):
             new_chat.save()
             for chat in chats:
                 chat.delete()
-            return HttpResponseRedirect('/chat/{0}'.format(new_chat.id))
+            return HttpResponseRedirect(reverse('chat:chat', kwargs={'chat_id': new_chat.id}))
     else:
         form = form_class()
     return render_to_response('chat/merge_private.html',

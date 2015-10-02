@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -55,7 +56,7 @@ def profile(request, username):
                 new_private_chat.participants.add(request.user)
                 new_private_chat.participants.add(user)
                 new_private_chat.save()
-                return HttpResponseRedirect("/chat/{0}".format(new_private_chat.id))
+                return HttpResponseRedirect(reverse('chat:chat', kwargs={'chat_id': new_private_chat.id}))
             else:
                 open_new_chat_form = True
 
@@ -84,7 +85,7 @@ def change_photo(request, user_id):
         if form.is_valid():
             user_profile = user.userprofile
             user_profile.set_profile_image(request.FILES['image'])
-    return HttpResponseRedirect('/user/{0}'.format(user.username))
+    return HttpResponseRedirect(reverse('profile', kwargs={'username': user.username}))
 
 
 def change_profile(request, user_id):
@@ -108,7 +109,7 @@ def change_profile(request, user_id):
             user_profile.sex = user_profile_form.cleaned_data['sex']
             user_profile.about = user_profile_form.cleaned_data['about']
             user_profile.save()
-            return HttpResponseRedirect('/user/{0}'.format(user.username))
+            return HttpResponseRedirect(reverse('profile', kwargs={'username': user.username}))
     else:
         user_form = UserForm()
         user_profile_form = UserProfileForm()
@@ -122,4 +123,4 @@ def change_profile(request, user_id):
 
 @login_required
 def my_profile(request):
-    return HttpResponseRedirect("/user/{0}".format(request.user.username))
+    return HttpResponseRedirect(reverse('profile', kwargs={'username': request.user.username}))
