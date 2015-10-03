@@ -87,19 +87,19 @@ function closeCommentForm(){
 function replaceCode(data, status, xhr){
   $('.highlight ol').html(data.code);
   $('#code-shadow').hide();
-  $('#raw').find('textarea').height($('.highlight').height());
-  $('#desc').find('textarea').height($('.highlight').height());
+  $('#raw').find('textarea').height($('#highlight').height());
+  $('#desc').find('textarea').height($('#highlight').height());
 }
 
 
 function updateCode(code, l){
-  $('#code-shadow').show();
+ $('#code-shadow').show();
   var opt = {
     url: '/snippetalk/highlight',
     type: 'get',
     data: {lang: l, code: code},
-    success: replaceCode,
-    complete: $('#code-shadow').hide
+    success: replaceCode
+   // complete: $('#code-shadow').hide
   };
   $.ajax(opt);
 }

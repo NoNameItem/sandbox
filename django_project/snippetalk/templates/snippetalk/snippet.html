@@ -126,7 +126,7 @@
             </li>
             {% if snippet.id %}
               <li role="presentation">
-                <button href="{% url 'snippetalk:delete' snippet.id %}" class="btn btn-xs" id="delete"
+                <button onclick="location.href='{% url 'snippetalk:delete' snippet.id %}'" class="btn btn-xs" id="delete"
                    data-toggle="tooltip" data-placement="bottom" title="Delete">
                   <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
