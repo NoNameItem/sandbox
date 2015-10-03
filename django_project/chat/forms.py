@@ -11,7 +11,7 @@ class ChatForm(forms.ModelForm):
         model = Chat
         fields = ('name', 'topic', 'participants')
         widgets = {
-            'participants': forms.SelectMultiple(attrs={'class': 'selectpicker', 'title': 'Select users'})
+            'participants': forms.SelectMultiple(attrs={'title': 'Select users'})
         }
 
 

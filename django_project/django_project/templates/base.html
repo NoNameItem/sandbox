@@ -8,10 +8,11 @@
   <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "x_paper_kit_1.0/assets/css/ct-paper.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "x_paper_kit_1.0/assets/css/examples.css" %}" rel="stylesheet" type="text/css">
-
-  <link href="{% static "sandbox/css/theme.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "select2/css/select2.min.css" %}" rel="stylesheet">
+  <link href="{% static "select2/css/select2-bootstrap.min.css" %}" rel="stylesheet">
   <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css" rel="stylesheet">
   {% block headers %}{% endblock %}
+  <link href="{% static "sandbox/css/theme.css" %}" rel="stylesheet" type="text/css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -61,10 +62,6 @@
 </nav>
 
 <div class="container">
-  <div class='notifications top-right' id="tr-notify" style="margin-top: 30px"></div>
-  <div class='notifications top-left' id="tl-notify" style="margin-top: 30px"></div>
-  <div class='notifications bottom-left' id="bl-notify" style="margin-top: 30px"></div>
-  <div class='notifications bottom-right' id="br-notify" style="margin-top: 30px"></div>
   {% block content %}{% endblock %}
 </div>
 

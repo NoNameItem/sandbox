@@ -12,7 +12,7 @@
 {% block content %}
     <form class="form-signin" action="#" method="post" role="form">
         {% csrf_token %}
-    	<legend>Update your profile info</legend>
+    	<legend class="h4">Update your profile info</legend>
 
     	<div class="form-group">
             {% if user_form.first_name.errors %}
@@ -71,4 +71,11 @@
 
     	<button type="submit" class="btn btn-default btn-lg btn-block">Submit</button>
     </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "select2/js/select2.min.js" %}"></script>
+  <script >
+    $('#id_sex').select2();
+  </script>
 {% endblock %}

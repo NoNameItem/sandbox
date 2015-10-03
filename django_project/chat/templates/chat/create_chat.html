@@ -24,7 +24,11 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static "bootstrap-select/js/bootstrap-select.min.js" %}"></script>
-
-  <script>$('.selectpicker').selectpicker();$('.bootstrap-select .dropdown-menu').removeClass('open');</script>
+{#  <script src="{% static "bootstrap-select/js/bootstrap-select.min.js" %}"></script>#}
+{##}
+{#  <script>$('.selectpicker').selectpicker();$('.bootstrap-select .dropdown-menu').removeClass('open');</script>#}
+  <script src="{% static "select2/js/select2.min.js" %}"></script>
+  <script >
+    $('select').select2();
+  </script>
 {% endblock %}

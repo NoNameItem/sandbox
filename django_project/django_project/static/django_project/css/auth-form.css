@@ -10,7 +10,8 @@
 .form-signin .checkbox {
   font-weight: normal;
 }
-.form-signin .form-control {
+.form-signin input.form-control,
+.form-signin textarea.form-control {
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
@@ -21,6 +22,13 @@
   border: 2px solid #bbbbbb;
   border-radius: 20px;
 }
+
+.form-signin textarea.form-control{
+  overflow-y: scroll;
+  border-radius: 3px
+}
+
+
 /*.form-signin .form-control:focus {*/
   /*z-index: 2;*/
 /*}*/

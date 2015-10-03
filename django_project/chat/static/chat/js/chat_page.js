@@ -42,7 +42,7 @@ function showAddUserForm(){
 
 
 function hideUserForm(){
-  $('.selectpicker').selectpicker('deselectAll');
+  $('select').val(null).trigger('change');
   add_user_form.slideUp(SLIDE_SPEED);
   add_user_button.slideDown(SLIDE_SPEED);
 }
