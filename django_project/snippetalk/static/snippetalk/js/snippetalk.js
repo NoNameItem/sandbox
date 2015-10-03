@@ -5,13 +5,14 @@ var mine;
 var data_source;
 var parent_comment;
 
+
 $.ajaxSetup({
   headers: {
     'X-CSRFToken': $("input[name=csrfmiddlewaretoken]").val()
   }
 });
 
-// <li><snippet.name> <a data-id="<snippet.id>"><span class="glyphicon glyphicon-remove"></span></a>
+
 var commentForm =
   $('<div class="row" style="padding-left: 40px">' +
     '<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 comment-form">' +
@@ -39,7 +40,9 @@ var commentForm =
     '</div>'+
     '</div>');
 
+
 var commentSnippets = [];
+
 
 var opts = {
   lines: 13 // The number of lines to draw
@@ -64,9 +67,22 @@ var opts = {
   , position: 'relative' // Element positioning
 };
 
+
+function showAlert(message, type){
+  $.notify(message, {
+    animate: {
+      enter: 'animated bounceIn',
+      exit: 'animated bounceOut'
+    },
+    type: type
+  });
+}
+
+
 function closeCommentForm(){
   commentForm.remove();
 }
+
 
 function replaceCode(data, status, xhr){
   $('.highlight ol').html(data.code);
@@ -74,6 +90,7 @@ function replaceCode(data, status, xhr){
   $('#raw').find('textarea').height($('.highlight').height());
   $('#desc').find('textarea').height($('.highlight').height());
 }
+
 
 function updateCode(code, l){
   $('#code-shadow').show();
@@ -87,6 +104,7 @@ function updateCode(code, l){
   $.ajax(opt);
 }
 
+
 function saved(data, status, xhr){
   if(data.link){
     window.location.replace(data.link);
@@ -95,22 +113,17 @@ function saved(data, status, xhr){
       $('#modified').text(data.mod_time);
     }
     $('.editable-unsaved').removeClass('editable-unsaved');
-    //$('#tr-notify').notify({
-    //  message: {text: 'Snipped saved'},
-    //  type: 'successgloss',
-    //  fadeOut: {enabled: true, delay: 5000}
-    //}).show();
-    showAlert('tr', {text: 'Snipped saved'}, 'successgloss', true, 5000);
+    //showAlert('tr', {text: 'Snipped saved'}, 'successgloss', true, 5000);
+    showAlert('Snipped Saved.', 'success');
   }
 }
 
+
 function notSaved(xhr, message, kk){
-  //$('#tr-notify').notify({
-  //  message: { text: "Can' save snippet"},
-  //  type: 'errorgloss',
-  //  fadeOut:{enabled: false, delay: 5000}}).show();
-  showAlert('tr', { text: "Can' save snippet"}, 'errorgloss', false, 0);
+  //showAlert('tr', { text: "Can' save snippet"}, 'errorgloss', false, 0);
+  showAlert("Can't save snippet.", 'danger');
 }
+
 
 function saveSnippet(){
   if($('#raw-ta').val().trim()) {
@@ -131,28 +144,24 @@ function saveSnippet(){
     };
     $.ajax(opt);
   } else showAlert('tr', { text: 'Snippet can\'t be empty, please fill "Raw" tab'}, 'errorgloss', false, 0);
-    //$('#tr-notify').notify({
-    //message: { text: 'Snippet can\'t be empty, please fill "Raw" tab'},
-    //type: 'errorgloss',
-    //fadeOut:{enabled: false, delay: 3000}}).show();
-
 }
+
 
 function insertComment(data, status, xhr){
   var parent = $('#answers-' + data.parent_id);
   parent.append(data.html);
   $('#comment-count').text(data.comment_count);
   closeCommentForm();
-  showAlert('tr', {text: 'Comment added'}, 'successgloss', true, 5000);
+  //showAlert('tr', {text: 'Comment added'}, 'successgloss', true, 5000);
+  showAlert('Comment Added', 'success');
 }
 
+
 function commentError(xhr, message, kk){
-  //$('#tr-notify').notify({
-  //  message: { text: "Can't save comment"},
-  //  type: 'errorgloss',
-  //  fadeOut:{enabled: false, delay: 3000}}).show();
-  showAlert('tr', { text: "Can't save comment"}, 'errorgloss', false, 0);
+  //showAlert('tr', { text: "Can't save comment"}, 'errorgloss', false, 0);
+  showAlert("Can't save comment", 'danger');
 }
+
 
 function postComment(){
   var comment = $('textarea#comment').val().trim();
@@ -172,13 +181,9 @@ function postComment(){
     };
     $.ajax(opt);
   } else showAlert('tr', { text: 'Comment can\'t be empty.'}, 'errorgloss', false, 0);
-    //$('#tr-notify').notify({
-    //message: { text: 'Comment can\'t be empty.'},
-    //type: 'errorgloss',
-    //fadeOut:{enabled: false, delay: 3000}}).show();
-
   $('textarea#comment').val('');
 }
+
 
 function onUpload(e){
   var data = JSON.parse(e.target.response);
@@ -188,6 +193,7 @@ function onUpload(e){
   $('#raw-ta').text(data.raw);
   $('.highlight ol').html(data.highlighted);
 }
+
 
 function sendFile() {
   if($('#file').val()) {
@@ -200,9 +206,11 @@ function sendFile() {
   }
 }
 
+
 function replacePreview(data, status, xhr){
   $('#my-snippet ol').html(data.code);
 }
+
 
 function get_snippet_preview() {
   var opt = {
@@ -215,6 +223,8 @@ function get_snippet_preview() {
   };
   $.ajax(opt);
 }
+
+
 $('document').ready(function(){
   var highlight = $('#highlight');
 

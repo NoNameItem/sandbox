@@ -24,6 +24,7 @@ def wrap_links(text):
     return URL_REGEX.sub(lambda x: '<a href="{0}">{0}</a>'.format(x.group(0)), text)
 
 
+# /snippetalk/
 def recent(request):
     snippets = Snippet.objects.filter(public=1).order_by('-modified')
     return render_to_response('snippetalk/list.html',
@@ -35,6 +36,7 @@ def recent(request):
                               RequestContext(request))
 
 
+# /snippetalk/my/
 @login_required
 def my(request):
     snippets = Snippet.objects.filter(author=request.user).order_by('-modified')
@@ -64,6 +66,7 @@ def create(request):
         return JsonResponse(status=400, data={'message': 'Use POST'})
 
 
+# /snippetalk/create/, /snippetalk/<id>/, /snippetalk/fork/<id>/
 def show(request, snippet_id=None, fork=False):
     active_page = None
     my_snippets = None
@@ -105,6 +108,7 @@ def show(request, snippet_id=None, fork=False):
                               RequestContext(request))
 
 
+# /snippetalk/highlight/
 def get_highlight(request):
     if request.method == 'GET':
         l = int(request.GET['lang']) - 1
@@ -115,6 +119,7 @@ def get_highlight(request):
         return JsonResponse(status=400, data={'message': "Use GET"})
 
 
+# /snippetalk/save/
 def save(request):
     if request.method == 'POST':
         if request.POST['id']:
@@ -140,12 +145,14 @@ def save(request):
         return JsonResponse(status=400, data={'message': "Use POST"})
 
 
+# /snippetalk/delete/<id>/
 def delete(request, snippet_id):
     snippet = get_object_or_404(Snippet, id=snippet_id)
     snippet.delete()
     return HttpResponseRedirect(reverse('snippetalk:recent'))
 
 
+# /snippetalk/comment/
 def comment(request):
     if request.method == 'POST':
         try:
@@ -175,6 +182,7 @@ def comment(request):
         return JsonResponse(status=400, data={'message': "Use POST"})
 
 
+# /snippetalk/download/<id>/
 def download(request, snippet_id):
     snippet = get_object_or_404(Snippet, id=snippet_id)
     filename = snippet.get_file()
@@ -186,6 +194,7 @@ def download(request, snippet_id):
     return response
 
 
+# /snippetalk/upload/
 def upload(request):
     if request.method == 'POST':
         form = FileForm(request.POST, request.FILES)
@@ -210,6 +219,7 @@ def upload(request):
         return JsonResponse(status=400, data={'message': "Use POST"})
 
 
+# /snippetalk/preview/
 def preview(request):
     if request.method == 'GET':
         try:
