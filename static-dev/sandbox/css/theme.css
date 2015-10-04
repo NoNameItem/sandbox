@@ -5,7 +5,7 @@ body {
   background-color: #f9f9f9;
 }
 
-div, a, li{
+div, a, li, img{
   transition: all 300ms ease-in!important;
 }
 
@@ -80,10 +80,8 @@ div, a, li{
 
 .modal-body{
   position: absolute;
-  top: 70px;
   overflow: hidden;
-  bottom: 60px;
-  padding-bottom: 0px;
+  padding: 15px 15px 0;
   width:100%
 }
 
@@ -102,7 +100,7 @@ div, a, li{
 
 .modal-body img{
   max-width: 90%;
-  height: 80vh;
+  height: 85vh;
 }
 
 .modal-footer {

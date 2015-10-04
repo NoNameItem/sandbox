@@ -178,7 +178,7 @@ function getUpdates(){
 function startChat(chatId, username){
   chat = chatId;
   usrname = username;
-  var ws = new WebSocket('ws://localhost:8889/chat/' + chatId + '/');
+  var ws = new WebSocket(WEBSOCKET_PREFIX + '/chat/' + chatId + '/');
   ws.onmessage = function(event){
     var mess = JSON.parse(event.data);
     if(mess.type == 'M'){

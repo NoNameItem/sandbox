@@ -76,7 +76,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
                                "django.core.context_processors.static",
                                "django.core.context_processors.tz",
                                "django.contrib.messages.context_processors.messages",
-                               "django_project.contexts.project_list")
+                               "django_project.contexts.my_context")
 
 
 # Internationalization
@@ -118,3 +118,5 @@ LOGIN_URL = '/accounts/login'
 PROJECTS = (('/chat/', 'Chat', 'Tornado-based WebSocket chat'),
             ('/snippetalk/', 'SnippeTalk', 'Share, read and comment code snippets'))
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+WEBSOCKET_PREFIX = 'ws://localhost:8889'

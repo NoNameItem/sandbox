@@ -96,7 +96,7 @@ function invited(mess){
 
 
 function connect(){
-  var ws = new WebSocket('ws://localhost:8889/notify/' + userId + '/');
+  var ws = new WebSocket(WEBSOCKET_PREFIX + '/notify/' + userId + '/');
 
   ws.onmessage = function(e){
     var data = JSON.parse(e.data);
