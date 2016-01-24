@@ -98,8 +98,8 @@ function updateCode(code, l){
     url: '/snippetalk/highlight',
     type: 'get',
     data: {lang: l, code: code},
-    success: replaceCode
-   // complete: $('#code-shadow').hide
+    success: replaceCode,
+    complete: $('#code-shadow').hide
   };
   $.ajax(opt);
 }
@@ -243,9 +243,13 @@ $('document').ready(function(){
   lang.editable({disabled : !mine, source: data_source});
   lang.on('hidden', function(e, reason){
     $('.select2-dropdown').hide();
+    /*if(lang.editable('getValue', true) != $('.ccc').val()){
+        updateCode($('#raw-ta').val(), $('.ccc').val());
+    }*/
   });
   lang.on('shown', function(e, editable) {
-    $('h1 small button[type="submit"]').click(function(event){
+    $('h2 small button[type="submit"]').click(function(event){
+      alert('aa');
       if(lang.editable('getValue', true) != $('.ccc').val()){
         updateCode($('#raw-ta').val(), $('.ccc').val());
       }
