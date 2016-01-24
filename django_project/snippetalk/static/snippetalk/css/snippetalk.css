@@ -194,3 +194,8 @@ textarea.form-control{
     left: 50px;
     overflow: auto;
 }
+
+#raw-ta, #desc-ta{
+  border: inherit;
+  border-radius: inherit;
+}
