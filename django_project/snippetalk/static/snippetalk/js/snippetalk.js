@@ -249,7 +249,6 @@ $('document').ready(function(){
   });
   lang.on('shown', function(e, editable) {
     $('h2 small button[type="submit"]').click(function(event){
-      alert('aa');
       if(lang.editable('getValue', true) != $('.ccc').val()){
         updateCode($('#raw-ta').val(), $('.ccc').val());
       }
