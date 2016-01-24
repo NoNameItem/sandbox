@@ -195,7 +195,12 @@ textarea.form-control{
     overflow: auto;
 }
 
-#raw-ta, #desc-ta{
+#raw-ta, #desc-ta {
   border: inherit;
   border-radius: inherit;
+}
+
+textarea#comment {
+  border-radius: inherit;
+  border: none;
 }
