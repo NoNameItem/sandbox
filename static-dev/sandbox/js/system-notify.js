@@ -5,6 +5,7 @@ var currChatId = null;
 var username = null;
 var userId;
 var reconnect = true;
+var retry = 0;
 
 
 function newMessage(mess){
@@ -119,7 +120,8 @@ function connect(){
   };
 
   ws.onclose = function(e){
-    if(reconnect)
+    retry++;
+    if(reconnect && retry < 10)
       setTimeout(connect, 100);
   };
 }

@@ -201,3 +201,7 @@ textarea.form-control {
 textarea:focus, input:focus{
 outline: none;
 }
+
+.nav-tabs > li.active :before, .nav-tabs > li.active :after {
+  border-bottom: none;
+}
