@@ -46,7 +46,7 @@ class Comment(models.Model):
     text = models.TextField()
     to_snippet = models.ForeignKey(Snippet, on_delete=models.CASCADE, related_name='comments')
     parent = models.ForeignKey('self', null=True, default=None, related_name='answers')
-    snippets = models.ManyToManyField(Snippet, null=True, default=None, related_name='mentions')
+    snippets = models.ManyToManyField(Snippet, default=None, related_name='mentions')
 
     def render(self):
         return render_to_string('snippetalk/comment.html', {'comm': self})
