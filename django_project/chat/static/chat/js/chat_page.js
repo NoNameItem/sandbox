@@ -21,6 +21,7 @@ var newest;
 var l;
 var usrname;
 var reconnect = true;
+var retry = 0;
 var visible = true;
 
 
@@ -207,7 +208,8 @@ function startChat(chatId, username){
   };
 
   ws.onclose = function(){
-    if(reconnect)
+    retry++;
+    if(reconnect && retry < 10)
       setTimeout(function() {startChat(chatId, username)}, 100);
   };
 
