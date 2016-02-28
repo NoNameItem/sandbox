@@ -5,9 +5,6 @@ body {
   background-color: #f9f9f9;
 }
 
-div, a, li, img{
-  transition: all 300ms ease-in!important;
-}
 
 .navbar {
   padding: 0;
@@ -198,7 +195,7 @@ textarea.form-control {
   border-radius: 10px!important;
 }
 
-textarea:focus, input:focus{
+:focus{
 outline: none;
 }
 

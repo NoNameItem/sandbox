@@ -255,7 +255,7 @@ $('document').ready(function(){
     });
   });
 
-  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="tooltip"]').tooltip({animation: false});
 
   $('a[href="#highlight"]').on('shown.bs.tab', function(event){
     if($('#raw-ta').val() != $('#raw-ta-hidden').val()){
