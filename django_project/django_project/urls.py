@@ -8,9 +8,12 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^accounts/register/$', views.MyRegistrationView.as_view(), name='registration_register'),
                        url(r'^accounts/profile/$', 'django_project.views.my_profile', name='my_profile'),
+
                        url(r'^accounts/', include('registration.backends.simple.urls')),
                        url(r'^chat/', include('chat.urls', namespace='chat')),
                        url(r'^snippetalk/', include('snippetalk.urls', namespace='snippetalk')),
+                       url(r'^ca/', include('cell_auto.urls', namespace='ca')),
+                       url(r'^bot/', include('bots_common.urls')),
 
                        url(r'^$', 'django_project.views.home', name='home'),
                        url(r'^user/(?P<username>\w+)/$', views.profile, name='profile'),

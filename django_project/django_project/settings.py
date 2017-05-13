@@ -42,6 +42,9 @@ INSTALLED_APPS = (
     'crispy_forms',
     'chat',
     'snippetalk',
+    # 'cell_auto',
+    'bots_common',
+    'huyaun_bot'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,8 +67,11 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'sandbox.db',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sandbox_dev',
+        'USER': 'dev',
+        'PASSWORD': 'dev',
+        'HOST': 'localhost'
     }
 }
 
@@ -117,7 +123,8 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_URL = '/accounts/login'
 
 PROJECTS = (('/chat/', 'Chat', 'Tornado-based WebSocket chat'),
-            ('/snippetalk/', 'SnippeTalk', 'Share, read and comment code snippets'))
+            ('/snippetalk/', 'SnippeTalk', 'Share, read and comment code snippets'),
+            ('/ca/', 'Cellular Automata', 'Play with different cellular automata'))
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 WEBSOCKET_PREFIX = 'ws://localhost:8889'
